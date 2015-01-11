@@ -36,14 +36,35 @@ function drawcube(x,y,side,rot){
 
 }
 
+// Draws a line between two points
 function drawline(x1,y1,x2,y2){
 
-  // Draws a line between two points
   ctx.beginPath();
   ctx.moveTo(x1,y1);
   ctx.lineTo(x2,y2);
   draw();
 }
 
+// Scrolls a text using a bezier curve
+function scroll(y,text,step,duration){
+  ctx.beginPath();
+  // Show curve path
+  ctx.moveTo(600, y);
+  ctx.bezierCurveTo(0, y-50, 600, y-50, 0, y);
+  draw();
+}
+
 function draw(){ctx.stroke()}
 
+// Iterator specs
+cycle=1;
+// Main function
+function main(){
+
+  // Update cycle data
+  cycle++;
+}
+
+// Main function call
+fps=40
+setInterval(main,1000/fps)
