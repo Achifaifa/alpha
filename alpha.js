@@ -67,9 +67,9 @@ function drawang(x,y,len,ang){
   xd=Math.sin(ang)*len;
   yd=Math.cos(ang)*len;
   drawline(x,y,x+xd,y+yd);
-
 }
 
+// TO-DO: WTF is this
 function bezier(y,text,step,speed){
   /*
   Scrolls a text using a bezier curve
@@ -102,6 +102,7 @@ function sinescroll(y,text,step,speed,oscil,space){
   draw();  
 }
 
+// TO-DO: Fix continuity
 function tunnel(x,y,rad,step){
   /*
   Draws a tunnel-like effect
@@ -122,13 +123,24 @@ function tunnel(x,y,rad,step){
   draw();
 }
 
-function raytrace(x1,y1,x2,y2,speed,trace,tracecol,step){
+// TO-DO
+function sqtunnel(x,y,xsize,ysize,step){
+  /*
+  Draws a rectangular tunnel
+  x,y: Position
+  xsize, ysize: Horizontal and vertical size of the tunnel
+  step: clock signal
+  */
+}
+
+// TO-DO: Fix partial transparency
+function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   /*
   Draws a fast-moving particle that leaves a trail
   x1,y1: Initial position
   x2,y2: Final position
   speed: Steps to completion
-  tracecol: Colour of the trace
+  R,G,B: Colour of the trace
   step: Clock signal
   */
 
@@ -147,7 +159,8 @@ function raytrace(x1,y1,x2,y2,speed,trace,tracecol,step){
   // if step>speed: transp=5*(step-spd) #Per cent
   if (trace==1){
     ctx.beginPath();
-    ctx.strokeStyle=tracecol;
+    if (step>speed*1.5) {transp=-0.1+(1/((step-speed)/8))+''} else {transp="1"}
+    ctx.strokeStyle="rgba("+R+","+G+","+B+","+transp+")";
     drawline(
       x1,
       y1,
@@ -160,13 +173,14 @@ function raytrace(x1,y1,x2,y2,speed,trace,tracecol,step){
   draw();
 }
 
+// TO-DO: fix 'gradients', improve continuity
 function sunsetdrive(step){
-/* 
-Draws a sunset drive scene (credits?)
-step: clock signal
+  /* 
+  Draws a sunset drive scene (credits?)
+  step: clock signal
 
-Warning: Clears everything below the horizon
-*/
+  Warning: Clears everything below the horizon
+  */
 
   raycycle=cycle%10;
   suncycle=cycle%150;
@@ -176,16 +190,18 @@ Warning: Clears everything below the horizon
   // Draw background sky, guessing colour from sun position
   ctx.beginPath();
   if (sunypos>450){         // Night (Set sky colour and city lights)
-    grad=ctx.createRadialGradient(300,550,1,300,550,250);
-    grad.addColorStop(0,"white");
-    grad.addColorStop(1,"black");
-    ctx.fillStyle=grad
+    // grad=ctx.createRadialGradient(300,550,1,300,550,250);
+    // grad.addColorStop(0,"white");
+    // grad.addColorStop(1,"black");
+    // ctx.fillStyle=grad
+    ctx.fillStyle="#000022"
   }       
   else if (sunypos>300){    // Sunset (Calculate sky colour, modify transparency)
-    grad=ctx.createRadialGradient(300,900,10,300,900,900);
-    grad.addColorStop(1, "blue");   
-    grad.addColorStop(0, "red");
-    ctx.fillStyle=grad
+    // grad=ctx.createRadialGradient(300,900,10,300,900,900);
+    // grad.addColorStop(1, "blue");   
+    // grad.addColorStop(0, "red");
+    // ctx.fillStyle=grad
+    ctx.fillStyle="red"
   }    
   else if (sunypos<300){    // Day (Do nothing because day is boring as fuck)
     ctx.fillStyle="blue";
@@ -266,20 +282,52 @@ Warning: Clears everything below the horizon
   }
 }
 
+// TO-DO
+function starfield(stars,step){
+  /*
+  Draws a classy starfield. 
+  stars: Number of stars
+  step: Clock signal
+  */
+}
+
+// TO-DO
+function octopus(step){
+  /*
+  Draws a plasma octopus thing
+  step: clock signal
+  */
+}
+
+// TO-DO
+function plasma(step){
+  /*
+  Plasma effect
+  step: clock signal
+  */
+}
+
+// TO-DO
+function meatballs(number, step){
+  /*
+  meatball effect
+  number: Number of balls
+  step: clock signal
+  */
+}
+
+// TO-DO
+function seascape(step){
+  /*
+  Draws a seascape
+  step: clock signal
+  */
+}
+
 function draw(){
 
   ctx.stroke()
 }
-
-// TO-DO functions
-//
-// Stars
-// Octopus thing (2D)
-// Plasma
-// Meatballs
-// Tunnel (square)
-// Seascape
-//
 
 // Iterator specs
 cycle=1;
@@ -287,8 +335,8 @@ subcycles={"a":1,"b":1,"c":1}
 scrh=500;
 count="u";
 
-// Main function
 function main(){
+  // Main function
 
   // Clear screen
   ctx.clearRect(0,0,600,600);
@@ -302,11 +350,11 @@ function main(){
   //tunnel(300,300,10,cycle);
 
   // Drive scene
-  sunsetdrive(cycle);
+  // sunsetdrive(cycle);
 
   // Traceray test
-  // subcycles.c=cycle%50;
-  // raytrace(0,300,600,300,10,1,"yellow",subcycles.c);
+  subcycles.c=cycle%100;
+  raytrace(0,300,600,300,10,1,"0","128","255",subcycles.c);
 
   // Scroller
   // if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
@@ -315,7 +363,6 @@ function main(){
   // Update cycle data
   cycle++;
   for (key in subcycles){subcycles[key]++;}
-
 }
 
 // Main function call
