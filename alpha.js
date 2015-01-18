@@ -173,6 +173,24 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   draw();
 }
 
+// TO-DO
+function markcoords(x,y){
+  /*
+  Draws some fancy graphics indicating coordenates
+  x,y: Position
+  */
+}
+
+// TO-DO
+function breaktitles(x,y,text,step){
+  /*
+  Generates a title screen that breaks over time
+  x,y: Text position
+  text: String to be shown
+  step: clock signal
+  */
+}
+
 // TO-DO: fix 'gradients', improve continuity
 function sunsetdrive(step){
   /* 
@@ -282,13 +300,54 @@ function sunsetdrive(step){
   }
 }
 
-// TO-DO
-function starfield(stars,step){
+// TO-DO: star function, starfield generation, movement
+function starfield(stars,speed,step){
   /*
   Draws a classy starfield. 
   stars: Number of stars
+  speed: Number of steps from center to edge. Lower is faster
   step: Clock signal
   */
+
+  //Create function for individual star
+  function movestar(starobj,step){
+    /*
+    Moves a single star in a field. Similar to raytrace
+    Assumes starting position is 300,300 (Center of screen)
+    starobj: object of the star being moved
+    step: clock signal
+    */
+
+
+    xd=Math.sin(ang)*len;
+    yd=Math.cos(ang)*len;
+    drawline(x,y,x+xd,y+yd);
+
+    ctx.beginPath();
+    ctx.strokeStyle="black";
+    drawline(
+      (step)*((x2-x1)/starobj.speed),
+      (step)*((y2-y1)/starobj.speed),
+      (step+1)*((x2-x1)/starobj.speed),
+      (step+1)*((y2-y1)/starobj.speed)
+    );
+  }
+
+  // Create a pool of N stars in random positions
+  // Stars are object with speed, current position and direction (rad)
+  if (step==1){
+    starsobj={}
+    for (i=0; i<stars; i++){
+      starsobj[i]={"speed":(30+20*Math.random()),"dir":(360*Math.random()*Math.PI/180)}
+      starsobj[i].step=Math.random()*starsobj[i].speed
+      //console.log(starsobj[i].speed,starsobj[i].dir,starsobj[i].step)
+    }
+  }
+
+  // Advance all the stars
+  for (i=0; i<starsobj.size; i++){movestar(starsobj[i],step)}
+
+  // Check stars. Redraw if out of screen
 }
 
 // TO-DO
@@ -353,12 +412,16 @@ function main(){
   // sunsetdrive(cycle);
 
   // Traceray test
-  subcycles.c=cycle%100;
-  raytrace(0,300,600,300,10,1,"0","128","255",subcycles.c);
+  // subcycles.c=cycle%100;
+  // raytrace(0,300,600,300,10,1,"0","128","255",subcycles.c);
 
   // Scroller
   // if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
   // sinescroll(500,"sunset drive",subcycles.a,4,5,20);
+
+  // Starfield
+  subcycles.d=cycle%200
+  starfield(10,50,subcycles.d);
 
   // Update cycle data
   cycle++;
