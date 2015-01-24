@@ -123,7 +123,7 @@ function tunnel(x,y,rad,step){
   draw();
 }
 
-// TO-DO
+// TO-DO (Copypaste tunnel code with squares. Or maybe add parameter)
 function sqtunnel(x,y,xsize,ysize,step){
   /*
   Draws a rectangular tunnel
@@ -155,7 +155,6 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   );
 
   // Draw trace
-  // TO-DO transparency depending on cycles
   // if step>speed: transp=5*(step-spd) #Per cent
   if (trace==1){
     ctx.beginPath();
@@ -173,15 +172,25 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   draw();
 }
 
-// TO-DO
 function markcoords(x,y){
   /*
   Draws some fancy graphics indicating coordenates
   x,y: Position
   */
+
+  drawsphere(x,y,15);
+  drawline(x-15,y,x-20,y);
+  drawline(x+20,y,x+15,y);
+  drawline(x,y-15,x,y-20);
+  drawline(x,y+20,x,y+15);
+  drawline(x-10,y-10,x-20,y-20);
+  drawline(x-20,y-20,x-70,y-20);
+  ctx.font="8px sans-serif";
+  ctx.fillText("X"+x,x-70,y-22);
+  ctx.fillText("Y"+y,x-70,y-12);
+  ctx.font="20px sans-serif bold";
 }
 
-// TO-DO
 function breaktitles(x,y,text,step){
   /*
   Generates a title screen that breaks over time
@@ -189,6 +198,15 @@ function breaktitles(x,y,text,step){
   text: String to be shown
   step: clock signal
   */
+
+  //if (step>70 && step<130) {step=97+(step/50)}
+  for (i=0; i<text.length; i++){
+    ctx.fillText(
+      text[i],
+      x-(2*Math.random()-1)*Math.abs(100-step)+(15*i),
+      y-(2*Math.random()-1)*Math.abs(100-step)
+    );
+  }
 }
 
 // TO-DO: fix 'gradients', improve continuity
@@ -295,57 +313,70 @@ function sunsetdrive(step){
   // Draw road rays
   for (j=0;j<=4;j++){
     for (i=-10;i<=10;i++){
-      raytrace(300,400,300+30*i,600,20,0,"green",raycycle+(5*j));
+      raytrace(300,400,300+30*i,600,20,0,"AA","AA","AA",raycycle+(5*j));
     }
   }
 }
 
-// TO-DO: star function, starfield generation, movement
 function starfield(stars,speed,step){
   /*
   Draws a classy starfield. 
   stars: Number of stars
-  speed: Number of steps from center to edge. Lower is faster
+  speed: Clock multiplier
   step: Clock signal
   */
 
+  step*=speed
+
   //Create function for individual star
-  function movestar(starobj,step){
+  function movestar(starobj){
     /*
     Moves a single star in a field. Similar to raytrace
     Assumes starting position is 300,300 (Center of screen)
+    Increments the starobj internal step in 1
     starobj: object of the star being moved
-    step: clock signal
     */
 
+    // calculate X and Y coordinates
+    starxsign=1
+    starysign=1
+    if (Math.cos(starobj.dir)<0){starxsign=-1}
+    if (Math.sin(starobj.dir)<0){starysign=-1}
+    
+    starymax=300
+    starxmax=300
+    if (3*Math.PI/4<starobj.dir<5*Math.PI/4 || 7*Math.PI/4<starobj.dir<9*Math.PI/4) {starymax=Math.abs(400*Math.sin(starobj.dir))}
+    if (1*Math.PI/4<starobj.dir<3*Math.PI/4 || 5*Math.PI/4<starobj.dir<7*Math.PI/4) {starxmax=Math.abs(400*Math.cos(starobj.dir))}
 
-    xd=Math.sin(ang)*len;
-    yd=Math.cos(ang)*len;
-    drawline(x,y,x+xd,y+yd);
+    starxpos=300+starxsign*starxmax*starobj.step/starobj.speed
+    starypos=300+starysign*starymax*starobj.step/starobj.speed
 
+    // Draw the star
     ctx.beginPath();
-    ctx.strokeStyle="black";
-    drawline(
-      (step)*((x2-x1)/starobj.speed),
-      (step)*((y2-y1)/starobj.speed),
-      (step+1)*((x2-x1)/starobj.speed),
-      (step+1)*((y2-y1)/starobj.speed)
-    );
+    drawsphere(starxpos,starypos,1); 
+    ctx.fill();
+
+    // Incerment star step, reset position and randomize direction if out of field
+    if (starobj.step<starobj.speed) {starobj.step=starobj.step+starobj.step/starobj.speed*2;}
+    else {starobj.step=1, starobj.dir=2*Math.random()*Math.PI}
   }
 
   // Create a pool of N stars in random positions
-  // Stars are object with speed, current position and direction (rad)
+  // Stars are object with speed, step and direction (rad)
   if (step==1){
-    starsobj={}
+    starsobj={size:0}
     for (i=0; i<stars; i++){
-      starsobj[i]={"speed":(30+20*Math.random()),"dir":(360*Math.random()*Math.PI/180)}
+      starsobj[i]={"speed":(10+40*Math.random()),"dir":2*Math.random()*Math.PI}
+      // Make the star start at a random point
       starsobj[i].step=Math.random()*starsobj[i].speed
-      //console.log(starsobj[i].speed,starsobj[i].dir,starsobj[i].step)
+      starsobj.size++
     }
-  }
+  };
 
   // Advance all the stars
-  for (i=0; i<starsobj.size; i++){movestar(starsobj[i],step)}
+  for (i=0; i<starsobj.size; i++){
+    movestar(starsobj[i]);
+  }
 
   // Check stars. Redraw if out of screen
 }
@@ -376,6 +407,30 @@ function meatballs(number, step){
 }
 
 // TO-DO
+function torsion(step){
+  /*
+  Draws some twisting bars
+  step: Clock signal
+  */
+}
+
+// TO-DO
+function snow(step){
+  /*
+  Draws some falling snow
+  step: Clock signal
+  */
+
+  // Create pool of snow drops
+  // if (step==1){
+  //   snowlist={}
+  //   for (i=0; i<200; i++){
+  //     snowlist[i]={"x":Math.random()*600,"plane":Math.int(Math.random()*4))}      
+  //   }
+  // }
+}
+
+// TO-DO
 function seascape(step){
   /*
   Draws a seascape
@@ -390,7 +445,7 @@ function draw(){
 
 // Iterator specs
 cycle=1;
-subcycles={"a":1,"b":1,"c":1}
+subcycles={"a":1,"b":1,"c":1,"d":1}
 scrh=500;
 count="u";
 
@@ -409,19 +464,32 @@ function main(){
   //tunnel(300,300,10,cycle);
 
   // Drive scene
-  // sunsetdrive(cycle);
+  //sunsetdrive(cycle);
 
   // Traceray test
   // subcycles.c=cycle%100;
   // raytrace(0,300,600,300,10,1,"0","128","255",subcycles.c);
 
-  // Scroller
-  // if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
-  // sinescroll(500,"sunset drive",subcycles.a,4,5,20);
-
   // Starfield
-  subcycles.d=cycle%200
-  starfield(10,50,subcycles.d);
+  //subcycles.d=cycle;
+  //starfield(25,1,subcycles.d);
+
+  // Bezier scroll
+  bezier(250,"bezier text",40,10,cycle%100)
+
+  // Double breaktitles
+  subcycles.e=cycle%400;
+  if (subcycles.e<=200){
+    breaktitles(240,375,"SAMPLE",subcycles.e);
+  }
+  else if (subcycles.e>200){
+    breaktitles(240,375,"TEXT",subcycles.e%200);
+  }
+
+  // Scroller
+  ctx.fillStyle="black"
+  if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
+  sinescroll(500,"Greetings to test scrollers",subcycles.a,4,5,20);
 
   // Update cycle data
   cycle++;
