@@ -155,10 +155,9 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   );
 
   // Draw trace
-  // if step>speed: transp=5*(step-spd) #Per cent
   if (trace==1){
     ctx.beginPath();
-    if (step>speed*1.5) {transp=-0.1+(1/((step-speed)/8))+''} else {transp="1"}
+    if (step>speed*1.5) {transp=-0.1+(1/((step-speed)/8))} else {transp=1}
     ctx.strokeStyle="rgba("+R+","+G+","+B+","+transp+")";
     drawline(
       x1,
@@ -247,8 +246,6 @@ function sunsetdrive(step){
   // If night, add stars
   if (sunypos>450){}
   draw();
-
-
 
   // Draw mountains
   // TO-DO
@@ -358,7 +355,11 @@ function starfield(stars,speed,step){
 
     // Incerment star step, reset position and randomize direction if out of field
     if (starobj.step<starobj.speed) {starobj.step=starobj.step+starobj.step/starobj.speed*2;}
-    else {starobj.step=1, starobj.dir=2*Math.random()*Math.PI}
+    else {
+      starobj.speed=50+20*Math.random();
+      starobj.step=Math.random()*starobj.speed;
+      starobj.dir=2*Math.random()*Math.PI
+    }
   }
 
   // Create a pool of N stars in random positions
@@ -366,7 +367,7 @@ function starfield(stars,speed,step){
   if (step==1){
     starsobj={size:0}
     for (i=0; i<stars; i++){
-      starsobj[i]={"speed":(10+40*Math.random()),"dir":2*Math.random()*Math.PI}
+      starsobj[i]={"speed":(50+20*Math.random()),"dir":2*Math.random()*Math.PI}
       // Make the star start at a random point
       starsobj[i].step=Math.random()*starsobj[i].speed
       starsobj.size++
@@ -378,7 +379,6 @@ function starfield(stars,speed,step){
     movestar(starsobj[i]);
   }
 
-  // Check stars. Redraw if out of screen
 }
 
 // TO-DO
@@ -387,6 +387,13 @@ function octopus(step){
   Draws a plasma octopus thing
   step: clock signal
   */
+
+  drawsphere(300,300,40);
+  //for (i=0; i<8){
+    // calculate initial and final coordinates
+    // draw sine waves
+    //drawline(xspos,yspos,xfpos,yfpos)
+  //}
 }
 
 // TO-DO
@@ -450,7 +457,9 @@ scrh=500;
 count="u";
 
 function main(){
-  // Main function
+  /*
+  Main function
+  */
 
   // Clear screen
   ctx.clearRect(0,0,600,600);
@@ -467,29 +476,33 @@ function main(){
   //sunsetdrive(cycle);
 
   // Traceray test
-  // subcycles.c=cycle%100;
-  // raytrace(0,300,600,300,10,1,"0","128","255",subcycles.c);
+  //subcycles.c=cycle%100;
+  //raytrace(0,300,600,300,10,1,"0","128","255",subcycles.c);
 
   // Starfield
-  //subcycles.d=cycle;
-  //starfield(25,1,subcycles.d);
+  subcycles.d=cycle;
+  starfield(25,1,subcycles.d);
 
+  // Octopus
+  //octopus(cycle);
+
+  // Text display tests
   // Bezier scroll
-  bezier(250,"bezier text",40,10,cycle%100)
+  //bezier(250,"bezier text",40,10,cycle%100);
 
-  // Double breaktitles
-  subcycles.e=cycle%400;
-  if (subcycles.e<=200){
-    breaktitles(240,375,"SAMPLE",subcycles.e);
-  }
-  else if (subcycles.e>200){
-    breaktitles(240,375,"TEXT",subcycles.e%200);
-  }
+  // [OK] Double breaktitles
+  // subcycles.e=cycle%360;
+  // if (subcycles.e<=180){
+  //   breaktitles(240,375,"SAMPLE",subcycles.e);
+  // }
+  // else if (subcycles.e>180){
+  //   breaktitles(240,375,"TEXT",subcycles.e%200);
+  // }
 
-  // Scroller
-  ctx.fillStyle="black"
-  if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
-  sinescroll(500,"Greetings to test scrollers",subcycles.a,4,5,20);
+  // [OK]Scroller
+  // ctx.fillStyle="black"
+  // if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
+  // sinescroll(500,"Greetings to test scrollers",subcycles.a,4,5,20);
 
   // Update cycle data
   cycle++;
