@@ -223,6 +223,7 @@ function sunsetdrive(step){
   sunypos=425-300*Math.sin(suncycle*Math.PI/80);
 
   // Draw background sky, guessing colour from sun position
+  // Gradients are temporary tests
   ctx.beginPath();
   if (sunypos>450){         // Night (Set sky colour and city lights)
     // grad=ctx.createRadialGradient(300,550,1,300,550,250);
@@ -419,22 +420,40 @@ function torsion(step){
   Draws some twisting bars
   step: Clock signal
   */
+
+  // Calculate side face separation
+  // Draw straight lines
+  // Draw bezier curves joining lines
+  // ??? 
 }
 
-// TO-DO
 function snow(step){
   /*
   Draws some falling snow
   step: Clock signal
   */
 
+  // Move each drop individually
+  function movedrop(snowdrop){
+    drawsphere(
+      snowdrop.x+25*Math.sin(snowdrop.snowstep*Math.PI/32),
+      snowdrop.snowstep*snowdrop.plane,
+      1
+    )
+    if (snowlist[i].snowstep*snowlist[i].plane>600){snowlist[i].snowstep=0}
+    else {snowlist[i].snowstep++}
+  }
+  
   // Create pool of snow drops
-  // if (step==1){
-  //   snowlist={}
-  //   for (i=0; i<200; i++){
-  //     snowlist[i]={"x":Math.random()*600,"plane":Math.int(Math.random()*4))}      
-  //   }
-  // }
+  if (step==1){
+    snowlist={}
+    for (i=0; i<200; i++){
+      snowlist[i]={"x":Math.random()*600,"plane":1+Math.floor(Math.random()*5)};
+      snowlist[i].snowstep=Math.random()*600/snowlist[i].plane      
+    }
+  }
+  // Draw drops based on position(x), step and plane
+  for (i=0; i<200; i++){movedrop(snowlist[i]);}
 }
 
 // TO-DO
@@ -443,6 +462,10 @@ function seascape(step){
   Draws a seascape
   step: clock signal
   */
+
+  // Move waves
+  // Paint highlights
+  // Paint sun/reflections
 }
 
 function draw(){
@@ -480,9 +503,12 @@ function main(){
   //raytrace(0,300,600,300,10,1,"0","128","255",subcycles.c);
 
   // Starfield
-  subcycles.d=cycle;
-  starfield(25,1,subcycles.d);
+  // subcycles.d=cycle;
+  // starfield(25,1,subcycles.d);
 
+  // [OK]Snow scene
+  snow(cycle);
+  
   // Octopus
   //octopus(cycle);
 
@@ -502,12 +528,16 @@ function main(){
   // [OK]Scroller
   // ctx.fillStyle="black"
   // if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
-  // sinescroll(500,"Greetings to test scrollers",subcycles.a,4,5,20);
+  // sinescroll(500,"Snow scroll test",subcycles.a,4,5,20);
 
   // Update cycle data
+  draw();
   cycle++;
   for (key in subcycles){subcycles[key]++;}
 }
+
+// TO-DO 
+// Loader (Once music is done)
 
 // Main function call
 fps=60
