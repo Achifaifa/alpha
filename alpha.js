@@ -435,10 +435,10 @@ function snow(step){
 
   // Move each drop individually
   function movedrop(snowdrop){
-    drawsphere(
+    ctx.fillRect(
       snowdrop.x+25*Math.sin(snowdrop.snowstep*Math.PI/32),
       snowdrop.snowstep*snowdrop.plane,
-      1
+      2,2
     )
     if (snowlist[i].snowstep*snowlist[i].plane>600){snowlist[i].snowstep=0}
     else {snowlist[i].snowstep++}
@@ -516,8 +516,8 @@ function main(){
   // Bezier scroll
   //bezier(250,"bezier text",40,10,cycle%100);
 
-  // [OK] Double breaktitles
-  // subcycles.e=cycle%360;
+  // Double breaktitles
+  //subcycles.e=cycle%360;
   // if (subcycles.e<=180){
   //   breaktitles(240,375,"SAMPLE",subcycles.e);
   // }
@@ -525,10 +525,10 @@ function main(){
   //   breaktitles(240,375,"TEXT",subcycles.e%200);
   // }
 
-  // [OK]Scroller
-  // ctx.fillStyle="black"
-  // if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
-  // sinescroll(500,"Snow scroll test",subcycles.a,4,5,20);
+  // Scroller
+  ctx.fillStyle="black"
+  if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
+  sinescroll(500,"Snow scroll test",subcycles.a,4,5,20);
 
   // Update cycle data
   draw();
