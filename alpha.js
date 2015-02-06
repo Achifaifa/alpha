@@ -1,16 +1,19 @@
 var c=document.getElementById("alpha");
-c.style.background="#FFFFFF";
+c.style.background="#000";
 var ctx=c.getContext("2d");
 ctx.canvas.width=600;
 ctx.canvas.height=600;
-
-ctx.fillStyle="black"
+ctx.fillStyle="white"
+ctx.strokeStyle="white"
 ctx.font="20px sans-serif bold";
 
 function drawsphere(x,y,rad){
   /*
   Draws a sphere
   (x,y): coordinates, rad: radius
+  
+  Note: Drawing a sphere requires loadsa resources.
+  This code is pretty slow
   */
 
   ctx.beginPath();
@@ -21,7 +24,7 @@ function drawsphere(x,y,rad){
 function drawcube(x,y,side,rot){
   /* 
   Draws a cube
-  (x,y): coordinates of the upper left corner
+  (x,y): coordinates of the "upper left" corner
   side: lenght of side
   rot: rotation of the cube in rad
   */
@@ -103,6 +106,7 @@ function sinescroll(y,text,step,speed,oscil,space){
 }
 
 // TO-DO: Fix continuity
+// Use the same technique as in the starfield or snow
 function tunnel(x,y,rad,step){
   /*
   Draws a tunnel-like effect
@@ -144,20 +148,24 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   step: Clock signal
   */
 
+  // Draw alpha 0 line (For tests)
+  ctx.strokeStyle="rgba(00,00,256,1)";
+  drawline (0,y1-25,600,y1-25);
+
   // Draw leading segment
   ctx.beginPath();
   ctx.strokeStyle="black";
   drawline(
-    x1+(step)*((x2-x1)/speed),
-    y1+(step)*((y2-y1)/speed),
-    x1+(step+1)*((x2-x1)/speed),
-    y1+(step+1)*((y2-y1)/speed)
+    x1+(step*((x2-x1)/speed)),
+    y1+(step*((y2-y1)/speed)),
+    x1+((step+1)*(x2-x1)/speed),
+    y1+((step+1)*(y2-y1)/speed)
   );
 
   // Draw trace
   if (trace==1){
     ctx.beginPath();
-    if (step>speed*1.5) {transp=-0.1+(1/((step-speed)/8))} else {transp=1}
+    if (step>speed*2) {transp=0} else {transp=1}
     ctx.strokeStyle="rgba("+R+","+G+","+B+","+transp+")";
     drawline(
       x1,
@@ -224,6 +232,7 @@ function sunsetdrive(step){
 
   // Draw background sky, guessing colour from sun position
   // Gradients are temporary tests
+  // They are pretty slow. bugzilla <number>
   ctx.beginPath();
   if (sunypos>450){         // Night (Set sky colour and city lights)
     // grad=ctx.createRadialGradient(300,550,1,300,550,250);
@@ -253,7 +262,7 @@ function sunsetdrive(step){
 
   // Draw sun
   // Starts at -30,10 and moves down to 550,450
-  // Sun ray test
+  // Sun ray test (Keep disabled for now)
   // for (i=1;i<=20;i++){
   //   drawang(sunxpos,sunypos,800,((Math.PI*i)+suncycle)/10);
   // }
@@ -316,7 +325,7 @@ function sunsetdrive(step){
   }
 }
 
-function starfield(stars,speed,step){
+function starfield(stars,speed,sstep){
   /*
   Draws a classy starfield. 
   stars: Number of stars
@@ -324,7 +333,7 @@ function starfield(stars,speed,step){
   step: Clock signal
   */
 
-  step*=speed
+  step=sstep*speed
 
   //Create function for individual star
   function movestar(starobj){
@@ -351,7 +360,7 @@ function starfield(stars,speed,step){
 
     // Draw the star
     ctx.beginPath();
-    drawsphere(starxpos,starypos,1); 
+    ctx.fillRect(starxpos,starypos,1,1); 
     ctx.fill();
 
     // Incerment star step, reset position and randomize direction if out of field
@@ -365,7 +374,7 @@ function starfield(stars,speed,step){
 
   // Create a pool of N stars in random positions
   // Stars are object with speed, step and direction (rad)
-  if (step==1){
+  if (sstep==1){
     starsobj={size:0}
     for (i=0; i<stars; i++){
       starsobj[i]={"speed":(50+20*Math.random()),"dir":2*Math.random()*Math.PI}
@@ -431,14 +440,17 @@ function snow(step){
   /*
   Draws some falling snow
   step: Clock signal
+  Coded during FOSDEM. Better souvenir than an actual snowball
   */
 
+  snowdropn=700
+  
   // Move each drop individually
   function movedrop(snowdrop){
     ctx.fillRect(
-      snowdrop.x+25*Math.sin(snowdrop.snowstep*Math.PI/32),
+      snowdrop.x-snowdrop.plane*1*snowdrop.snowstep+25*Math.sin(snowdrop.snowstep*Math.PI/32),
       snowdrop.snowstep*snowdrop.plane,
-      2,2
+      2,2 // Snow drop size
     )
     if (snowlist[i].snowstep*snowlist[i].plane>600){snowlist[i].snowstep=0}
     else {snowlist[i].snowstep++}
@@ -446,14 +458,16 @@ function snow(step){
   
   // Create pool of snow drops
   if (step==1){
-    snowlist={}
-    for (i=0; i<200; i++){
-      snowlist[i]={"x":Math.random()*600,"plane":1+Math.floor(Math.random()*5)};
+    snowlist={"size":0}
+    for (i=0; i<snowdropn; i++){
+      snowlist[i]={"x":Math.random()*1200,"plane":1+Math.floor(Math.random()*7)};
       snowlist[i].snowstep=Math.random()*600/snowlist[i].plane      
+      snowlist.size++
     }
+  //console.log("snow initialized. Drop count "+snowlist.size)
   }
   // Draw drops based on position(x), step and plane
-  for (i=0; i<200; i++){movedrop(snowlist[i]);}
+  for (i=0; i<snowdropn; i++){movedrop(snowlist[i]);}
 }
 
 // TO-DO
@@ -473,10 +487,35 @@ function draw(){
   ctx.stroke()
 }
 
+// Sync stuff
+
+bpm=150;
+beat=0;
+beatpool=0;
+
+function updatebeat(){
+  /*
+  Updates the beat counter from the current and previous unix time
+  Beatpool is a pool of milliseconds. When it gets to a level, 
+  beat increases.
+  */
+
+  currentdate=new Date();
+  utime=currentdate.getTime();
+  beatpool=beatpool+(utime-lastdate);
+  lastdate=utime;
+  if (beatpool>(1000*5/fps*6)-117){
+    beatpool=0;
+    beat=beat+1;
+  }
+  ctx.fillText(beat,20,20);
+}
+
 // Iterator specs
-cycle=1;
+
 subcycles={"a":1,"b":1,"c":1,"d":1}
 scrh=500;
+cycle=1;
 count="u";
 
 function main(){
@@ -486,59 +525,89 @@ function main(){
 
   // Clear screen
   ctx.clearRect(0,0,600,600);
+  ctx.fillStyle="white"
+  ctx.strokeStyle="white"
 
-  // CUBE! (top view)
-  // posx=300+(Math.sin(Math.PI*cycle/2.4*2/45+(Math.PI/4))*450)/2;
-  // posy=300+(Math.cos(Math.PI*cycle/1.1*2/45+(Math.PI/4))*450)/2;
+
+  // [OK] CUBE! (top view)
+  // posx=300+(Math.sin(Math.PI*cycle/2.3*2/45+(Math.PI/4))*425)/2;
+  // posy=300+(Math.cos(Math.PI*cycle/1.3*2/45+(Math.PI/4))*425)/2;
   // drawcube(posx,posy,100,Math.PI*(cycle)*2/45);
 
-  // Tunnel
-  //tunnel(300,300,10,cycle);
+  // [Kräp] Tunnel
+  // tunnel(300,300,10,cycle);
 
-  // Drive scene
-  //sunsetdrive(cycle);
+  // [WIP, gradient lag] Drive scene
+  // sunsetdrive(cycle);
 
-  // Traceray test
-  //subcycles.c=cycle%100;
-  //raytrace(0,300,600,300,10,1,"0","128","255",subcycles.c);
+  // [Tranparency weirdness] Traceray test
+  // subcycles.c=cycle%100;
+  // raytrace(0,300,600,300,10,1,0,128,255,subcycles.c);
 
-  // Starfield
-  // subcycles.d=cycle;
-  // starfield(25,1,subcycles.d);
+  // [Meh] Starfield
+  subcycles.d=cycle;
+  starfield(300,1,subcycles.d);
 
-  // [OK]Snow scene
-  snow(cycle);
+  // [OK] Snow scene
+  // snow(cycle);
   
-  // Octopus
+  // [WIP] Octopus
   //octopus(cycle);
 
   // Text display tests
-  // Bezier scroll
-  //bezier(250,"bezier text",40,10,cycle%100);
+  // [Nope] Bezier scroll
+  // bezier(250,"bezier text",40,10,cycle%100);
 
-  // Double breaktitles
-  //subcycles.e=cycle%360;
-  // if (subcycles.e<=180){
+  // [Close enough] Double breaktitles
+  // subcycles.e=cycle%300;
+  // if (subcycles.e<=150){
   //   breaktitles(240,375,"SAMPLE",subcycles.e);
   // }
-  // else if (subcycles.e>180){
-  //   breaktitles(240,375,"TEXT",subcycles.e%200);
+  // else if (subcycles.e>150){
+  //   breaktitles(240,375,"TEXT",subcycles.e%150);
   // }
 
-  // Scroller
-  ctx.fillStyle="black"
-  if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
-  sinescroll(500,"Snow scroll test",subcycles.a,4,5,20);
+  // [Looks weird] Scroller
+  // if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
+  // sinescroll(500,"Greetings to test subjects 023 to 091",subcycles.a,4,5,20);
 
   // Update cycle data
-  draw();
+  // draw();
+
+  updatebeat();
   cycle++;
   for (key in subcycles){subcycles[key]++;}
 }
 
-// TO-DO 
-// Loader (Once music is done)
+// Other functions for menus and shit
+
+function demo(ev){
+  last_click={"x":ev.clientX-c.offsetLeft+window.scrollX,"y":ev.clientY+window.scrollY-c.offsetTop};
+  if (last_click.y>250 && last_click.y<350){
+    c.removeEventListener("mousedown",demo);
+    console.log("starting demo");
+    tempdate=new Date();
+    lastdate=tempdate.getTime();
+    fps=60;
+    track.play();
+    setInterval(main,1000/fps);
+  }
+}
+
+function menu(){
+  ctx.fillText("LOADERING",250,310);
+  track=new Audio("achifaifa.wav");
+  track.src="./achifaifa.wav";
+  track.load();
+  ctx.clearRect(0,0,600,600);
+  drawline(0,250,600,250);
+  drawline(0,350,600,350);
+  ctx.fillText("PLAY",225,310);
+  c.addEventListener("mousedown",demo,false)
+}
+
 
 // Main function call
-fps=60
-setInterval(main,1000/fps)
+menu()
+
+
