@@ -504,19 +504,25 @@ function updatebeat(){
   utime=currentdate.getTime();
   beatpool=beatpool+(utime-lastdate);
   lastdate=utime;
-  if (beatpool>(1000*5/fps*6)-117){
+  if (beatpool>(1000*5/fps*6)-118){
     beatpool=0;
     beat=beat+1;
   }
-  ctx.fillText(beat,20,20);
+  ctx.fillText(beat+"/"+cycle+"/"+subcycle,20,20);
 }
 
 // Iterator specs
 
-subcycles={"a":1,"b":1,"c":1,"d":1}
+fps=60;
+subcycle=1
 scrh=500;
 cycle=1;
 count="u";
+
+// Sync vars
+eventinit=0;
+pauseinit=0;
+eff1init=0;
 
 function main(){
   /*
@@ -528,6 +534,7 @@ function main(){
   ctx.fillStyle="white"
   ctx.strokeStyle="white"
 
+  // Effect testing
 
   // [OK] CUBE! (top view)
   // posx=300+(Math.sin(Math.PI*cycle/2.3*2/45+(Math.PI/4))*425)/2;
@@ -545,8 +552,8 @@ function main(){
   // raytrace(0,300,600,300,10,1,0,128,255,subcycles.c);
 
   // [Meh] Starfield
-  subcycles.d=cycle;
-  starfield(300,1,subcycles.d);
+  // subcycles.d=cycle;
+  // starfield(300,1,subcycles.d);
 
   // [OK] Snow scene
   // snow(cycle);
@@ -574,9 +581,38 @@ function main(){
   // Update cycle data
   // draw();
 
+  // Actual demo 
+
+  // Intro
+  if (beat<32){
+    starfield(300,1,subcycle);
+  }
+
+  // Event reference
+  else if (beat>=32 && beat<65){
+    if (beat==32 && eventinit==0){subcycle=1;eventinit=1};
+    snow(subcycle);
+  }
+
+  // Pause
+  else if (beat>=65 && beat<81){
+    if (beat==65 && pauseinit==0){subcycle=1;pauseinit=1};
+    ctx.fillText("THIS IS A PAUSE",250,300);
+  }
+
+  // Effect1
+  else if (beat>=81 && beat<98){
+    if (beat==85 && eff1init==0){subcycle=1;eff1init=1};
+    posx=300+(Math.sin(Math.PI*cycle/2.3*2/45+(Math.PI/4))*425)/2;
+    posy=300+(Math.cos(Math.PI*cycle/1.3*2/45+(Math.PI/4))*425)/2;
+    drawcube(posx,posy,100,Math.PI*(cycle)*2/45);
+  }
+
+
+
   updatebeat();
   cycle++;
-  for (key in subcycles){subcycles[key]++;}
+  subcycle++
 }
 
 // Other functions for menus and shit
@@ -586,15 +622,18 @@ function demo(ev){
   if (last_click.y>250 && last_click.y<350){
     c.removeEventListener("mousedown",demo);
     console.log("starting demo");
+    clearInterval();
     tempdate=new Date();
     lastdate=tempdate.getTime();
-    fps=60;
     track.play();
     setInterval(main,1000/fps);
   }
 }
 
 function menu(){
+  menuc=0;
+  done=0;
+  ctx.fillStyle="white"
   ctx.fillText("LOADERING",250,310);
   track=new Audio("achifaifa.wav");
   track.src="./achifaifa.wav";
@@ -603,6 +642,8 @@ function menu(){
   drawline(0,250,600,250);
   drawline(0,350,600,350);
   ctx.fillText("PLAY",225,310);
+  done=1;
+
   c.addEventListener("mousedown",demo,false)
 }
 
