@@ -436,7 +436,7 @@ function torsion(step){
   // ??? 
 }
 
-function snow(step){
+function snow(step,stop){
   /*
   Draws some falling snow
   step: Clock signal
@@ -452,7 +452,7 @@ function snow(step){
       snowdrop.snowstep*snowdrop.plane,
       2,2 // Snow drop size
     )
-    if (snowlist[i].snowstep*snowlist[i].plane>600){snowlist[i].snowstep=0}
+    if (snowlist[i].snowstep*snowlist[i].plane>600 && stop==0){snowlist[i].snowstep=0}
     else {snowlist[i].snowstep++}
   }
   
@@ -480,6 +480,17 @@ function seascape(step){
   // Move waves
   // Paint highlights
   // Paint sun/reflections
+}
+
+// TO-DO
+function gelogo(step){
+  /*
+  Draws the GE logo with the \o/ dudes
+
+  step: clock signal
+  */
+
+
 }
 
 function draw(){
@@ -514,15 +525,19 @@ function updatebeat(){
 // Iterator specs
 
 fps=60;
-subcycle=1
+subcycle=1;
+backwards=0;
 scrh=500;
 cycle=1;
 count="u";
 
 // Sync vars
+introinit=0;
 eventinit=0;
-pauseinit=0;
 eff1init=0;
+
+// Testing
+test=1;
 
 function main(){
   /*
@@ -550,69 +565,74 @@ function main(){
   // [Tranparency weirdness] Traceray test
   // subcycles.c=cycle%100;
   // raytrace(0,300,600,300,10,1,0,128,255,subcycles.c);
-
-  // [Meh] Starfield
-  // subcycles.d=cycle;
-  // starfield(300,1,subcycles.d);
-
-  // [OK] Snow scene
-  // snow(cycle);
   
   // [WIP] Octopus
   //octopus(cycle);
 
+  // [WIP] GE logo
+  gelogo(step);
+
   // Text display tests
   // [Nope] Bezier scroll
-  // bezier(250,"bezier text",40,10,cycle%100);
+  //bezier(250,"bezier text",40,10,cycle%100);
 
-  // [Close enough] Double breaktitles
-  // subcycles.e=cycle%300;
-  // if (subcycles.e<=150){
-  //   breaktitles(240,375,"SAMPLE",subcycles.e);
-  // }
-  // else if (subcycles.e>150){
-  //   breaktitles(240,375,"TEXT",subcycles.e%150);
-  // }
-
-  // [Looks weird] Scroller
-  // if (subcycles.a>400){subcycles.a=0;scrh=50+Math.random()*500};
-  // sinescroll(500,"Greetings to test subjects 023 to 091",subcycles.a,4,5,20);
-
-  // Update cycle data
-  // draw();
-
+  if (test==0){
   // Actual demo 
 
   // Intro
   if (beat<32){
+    if (introinit==0){subcycle=1;introinit=1};
     starfield(300,1,subcycle);
+    if (beat<12){
+      breaktitles(150,200,"Stage7",subcycle);
+    }
+    else if (beat>=12 && beat<21){
+      breaktitles(150,200,"Achifaifa",subcycle-125);
+    }
+    else if (beat>=21){
+      breaktitles(150,275,"Present",subcycle-275);
+    }
   }
 
   // Event reference
-  else if (beat>=32 && beat<65){
-    if (beat==32 && eventinit==0){subcycle=1;eventinit=1};
-    snow(subcycle);
-  }
-
-  // Pause
-  else if (beat>=65 && beat<81){
-    if (beat==65 && pauseinit==0){subcycle=1;pauseinit=1};
-    ctx.fillText("THIS IS A PAUSE",250,300);
+  else if (beat<81){
+    if (eventinit==0){subcycle=1;eventinit=1};
+    if (beat<62) {snow(subcycle,0);}
+    else {snow(subcycle,1);}
+    //if (beat>48){subcycle=subcycle-2};
   }
 
   // Effect1
-  else if (beat>=81 && beat<98){
-    if (beat==85 && eff1init==0){subcycle=1;eff1init=1};
+  else if (beat<113){
+    if (eff1init==0){subcycle=1;eff1init=1};
     posx=300+(Math.sin(Math.PI*cycle/2.3*2/45+(Math.PI/4))*425)/2;
     posy=300+(Math.cos(Math.PI*cycle/1.3*2/45+(Math.PI/4))*425)/2;
     drawcube(posx,posy,100,Math.PI*(cycle)*2/45);
+    sinescroll(500,"Rotating cubes!                                 (Top view)",subcycle,4,5,20)
+    if (beat>=96){
+      posxx=300+(Math.sin(Math.PI*(cycle+100)/2.3*2/45+(Math.PI/4))*425)/2;
+      posyy=300+(Math.cos(Math.PI*(cycle+100)/3.4*2/45+(Math.PI/4))*425)/2;
+      drawcube(posxx,posyy,100,Math.PI*(cycle+100)*2/45);
+    }
   }
 
+  // Effect2
+  else if (beat<130){
+    ctx.fillText("EFFECT 2",300,300);
+  }
 
+  // Effect3
+  else if (beat<147){
+    ctx.fillText("EFFECT 3",300,300);
+  }
+
+  // Wut
+  else {ctx.fillText("END OF TRACK LOL",300,300)}
 
   updatebeat();
   cycle++;
   subcycle++
+  }
 }
 
 // Other functions for menus and shit
@@ -621,11 +641,10 @@ function demo(ev){
   last_click={"x":ev.clientX-c.offsetLeft+window.scrollX,"y":ev.clientY+window.scrollY-c.offsetTop};
   if (last_click.y>250 && last_click.y<350){
     c.removeEventListener("mousedown",demo);
-    console.log("starting demo");
     clearInterval();
     tempdate=new Date();
     lastdate=tempdate.getTime();
-    track.play();
+    if (test==0){track.play();}
     setInterval(main,1000/fps);
   }
 }
