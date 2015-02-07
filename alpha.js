@@ -116,13 +116,12 @@ function tunnel(x,y,rad,step){
   */
 
   ctx.beginPath();
-  stepper=(step/7)%5;
   step=step/4;
   for (i=1;i<30;i++){
     drawsphere(
       x+60*Math.sin(cycle/3)+i/60*Math.sin(Math.PI/5)*600*Math.sin(step+(i*Math.PI/524)/(Math.PI/40)),
       y+60*Math.cos(cycle/4)+i/60*Math.sin(Math.PI/5)*600*Math.cos(step+(i*Math.PI/524)/(Math.PI/40)),
-      rad*stepper*(1+(i/3)));
+      rad*step*(1+(i/3)));
   }
   draw();
 }
@@ -325,7 +324,7 @@ function sunsetdrive(step){
   }
 }
 
-function starfield(stars,speed,sstep){
+function starfield(stars,speed,sstep,die){
   /*
   Draws a classy starfield. 
   stars: Number of stars
@@ -365,7 +364,7 @@ function starfield(stars,speed,sstep){
 
     // Incerment star step, reset position and randomize direction if out of field
     if (starobj.step<starobj.speed) {starobj.step=starobj.step+starobj.step/starobj.speed*2;}
-    else {
+    else if (die==0){
       starobj.speed=50+20*Math.random();
       starobj.step=Math.random()*starobj.speed;
       starobj.dir=2*Math.random()*Math.PI
@@ -483,14 +482,39 @@ function seascape(step){
 }
 
 // TO-DO
-function gelogo(step){
+function gelogo(element){
   /*
   Draws the GE logo with the \o/ dudes
 
-  step: clock signal
+  element: number of elements drawn.
+  Speed controlled externally
   */
 
-
+  ctx.font="50px sans-serif bold";
+  ctx.fillStyle="blue";
+  ctx.fillText("\\O/",286,300);
+  ctx.font="40px sans-serif bold";
+  ctx.fillStyle="green";
+  ctx.fillText("\\O/",260,340);
+  ctx.fillStyle="red";
+  ctx.fillText("\\O/",330,340);
+  ctx.font="20px sans-serif bold";
+  ctx.fillStyle="blue";
+  ctx.fillText("\\O/",250,370);
+  ctx.fillStyle="orange";
+  ctx.fillText("\\O/",290,370);
+  ctx.fillStyle="purple";
+  ctx.fillText("\\O/",330,370);
+  ctx.fillStyle="green";
+  ctx.fillText("\\O/",370,370);
+  ctx.font="25px sans-serif";
+  ctx.fillStyle="white";
+  ctx.fillText("GIPUZKOA",247,395);
+  ctx.font="25px sans-serif bold";
+  ctx.fillText("encounter",247,412);
+  ctx.font="45px sans-serif";
+  ctx.fillText("9",375,412)
+  ctx.font="20px sans-serif bold";
 }
 
 function draw(){
@@ -534,10 +558,12 @@ count="u";
 // Sync vars
 introinit=0;
 eventinit=0;
-eff1init=0;
+cubeinit=0;
+tunninit=0;
+tunn2init=0;
 
 // Testing
-test=1;
+test=0;
 
 function main(){
   /*
@@ -551,14 +577,6 @@ function main(){
 
   // Effect testing
 
-  // [OK] CUBE! (top view)
-  // posx=300+(Math.sin(Math.PI*cycle/2.3*2/45+(Math.PI/4))*425)/2;
-  // posy=300+(Math.cos(Math.PI*cycle/1.3*2/45+(Math.PI/4))*425)/2;
-  // drawcube(posx,posy,100,Math.PI*(cycle)*2/45);
-
-  // [Kräp] Tunnel
-  // tunnel(300,300,10,cycle);
-
   // [WIP, gradient lag] Drive scene
   // sunsetdrive(cycle);
 
@@ -569,8 +587,8 @@ function main(){
   // [WIP] Octopus
   //octopus(cycle);
 
-  // [WIP] GE logo
-  gelogo(step);
+  // [Mostly OK] GE logo
+  // gelogo(cycle);
 
   // Text display tests
   // [Nope] Bezier scroll
@@ -582,7 +600,14 @@ function main(){
   // Intro
   if (beat<32){
     if (introinit==0){subcycle=1;introinit=1};
-    starfield(300,1,subcycle);
+    // Starfield
+    if (beat<25) {
+      starfield(300,1,subcycle,0);
+    }
+    else if (beat>=25) {
+      starfield(300,1,subcycle,1)
+    }
+    // Titles
     if (beat<12){
       breaktitles(150,200,"Stage7",subcycle);
     }
@@ -597,14 +622,43 @@ function main(){
   // Event reference
   else if (beat<81){
     if (eventinit==0){subcycle=1;eventinit=1};
-    if (beat<62) {snow(subcycle,0);}
-    else {snow(subcycle,1);}
+    sinescroll(100,"HTML5!",(subcycle*2),2,8,20);
+    sinescroll(150,"Tracker magic",(subcycle*3)-100,2,10,20);
+    sinescroll(200,"JS!",(subcycle*2)-200,3,8,20);
+    sinescroll(250,"Canvas powered!",(subcycle*2)-150,2,5,20);
+    sinescroll(300,"Demoscene in your browser!",(subcycle*3)-225,2,7,20);
+    sinescroll(200,"Made with love for",(subcycle*1.6)-270,2,5,20);
+    if (beat>79){
+      if (cycle%2==0){
+        ctx.fillStyle="black";
+        c.style.background="#FFF";
+      }
+      else if (cycle%2!=0){
+        ctx.fillStyle="white"
+        c.style.background="#000";
+      }
+      ctx.font="50px bold"
+      ctx.fillText("BRING",100,350);
+      ctx.fillText("THE",175,400);
+      ctx.fillText("SCENE",250,450);
+      ctx.fillText("BACK",325,500);
+      ctx.font="20px sans-serif bold";
+      ctx.fillStyle="white"
+      c.style.background="#000";
+    }
+    if (beat<60) {snow(subcycle,0);}
+    else {
+      snow(subcycle,1);
+      if (beat>63){
+        gelogo(beat);
+      }
+    }
     //if (beat>48){subcycle=subcycle-2};
   }
 
-  // Effect1
+  // Effect1 (cubes)
   else if (beat<113){
-    if (eff1init==0){subcycle=1;eff1init=1};
+    if (cubeinit==0){subcycle=1;cubeinit=1};
     posx=300+(Math.sin(Math.PI*cycle/2.3*2/45+(Math.PI/4))*425)/2;
     posy=300+(Math.cos(Math.PI*cycle/1.3*2/45+(Math.PI/4))*425)/2;
     drawcube(posx,posy,100,Math.PI*(cycle)*2/45);
@@ -616,14 +670,16 @@ function main(){
     }
   }
 
-  // Effect2
+  // Effect2 (tunnel)
   else if (beat<130){
-    ctx.fillText("EFFECT 2",300,300);
+    if (tunninit==0){subcycle=1;tunninit=1};
+    ctx.fillText("Round tunnel goes here",250,300);
   }
 
-  // Effect3
+  // Effect3 (moretunnel)
   else if (beat<147){
-    ctx.fillText("EFFECT 3",300,300);
+    if (tunn2init==0){subcycle=1;tunn2init=1};
+    ctx.fillText("Square tunnel goes here",250,300);
   }
 
   // Wut
@@ -666,8 +722,5 @@ function menu(){
   c.addEventListener("mousedown",demo,false)
 }
 
-
 // Main function call
 menu()
-
-
