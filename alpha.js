@@ -492,28 +492,28 @@ function gelogo(element){
 
   ctx.font="50px sans-serif bold";
   ctx.fillStyle="blue";
-  ctx.fillText("\\O/",286,300);
+  ctx.fillText("\\O/",286,250);
   ctx.font="40px sans-serif bold";
   ctx.fillStyle="green";
-  ctx.fillText("\\O/",260,340);
+  ctx.fillText("\\O/",260,290);
   ctx.fillStyle="red";
-  ctx.fillText("\\O/",330,340);
+  ctx.fillText("\\O/",330,290);
   ctx.font="20px sans-serif bold";
   ctx.fillStyle="blue";
-  ctx.fillText("\\O/",250,370);
+  ctx.fillText("\\O/",250,315);
   ctx.fillStyle="orange";
-  ctx.fillText("\\O/",290,370);
+  ctx.fillText("\\O/",290,315);
   ctx.fillStyle="purple";
-  ctx.fillText("\\O/",330,370);
+  ctx.fillText("\\O/",330,315);
   ctx.fillStyle="green";
-  ctx.fillText("\\O/",370,370);
+  ctx.fillText("\\O/",370,315);
   ctx.font="25px sans-serif";
   ctx.fillStyle="white";
-  ctx.fillText("GIPUZKOA",247,395);
+  ctx.fillText("GIPUZKOA",247,345);
   ctx.font="25px sans-serif bold";
-  ctx.fillText("encounter",247,412);
+  ctx.fillText("encounter",247,362);
   ctx.font="45px sans-serif";
-  ctx.fillText("9",375,412)
+  ctx.fillText("9",375,362)
   ctx.font="20px sans-serif bold";
 }
 
@@ -622,13 +622,13 @@ function main(){
   // Event reference
   else if (beat<81){
     if (eventinit==0){subcycle=1;eventinit=1};
-    sinescroll(100,"HTML5!",(subcycle*2),2,8,20);
-    sinescroll(150,"Tracker magic",(subcycle*3)-100,2,10,20);
-    sinescroll(200,"JS!",(subcycle*2)-200,3,8,20);
-    sinescroll(250,"Canvas powered!",(subcycle*2)-150,2,5,20);
-    sinescroll(300,"Demoscene in your browser!",(subcycle*3)-225,2,7,20);
-    sinescroll(200,"Made with love for",(subcycle*1.6)-270,2,5,20);
-    if (beat>79){
+    if (subcycle<200){sinescroll(100,"HTML5!",(subcycle*2),2,8,20);}
+    if (subcycle<200){sinescroll(150,"Tracker magic",(subcycle*3)-100,2,10,20);}
+    if (subcycle<250){sinescroll(200,"JS!",(subcycle*2)-200,3,8,20); }
+    if (subcycle<320){sinescroll(250,"Canvas powered!",(subcycle*2)-150,2,5,20); }
+    if (subcycle<280){sinescroll(300,"Demoscene in your browser!",(subcycle*3)-225,2,7,20);}
+    if (subcycle>200){sinescroll(200,"Made with love for",(subcycle*1.6)-270,2,5,20);}
+    if (beat>=79){
       if (cycle%2==0){
         ctx.fillStyle="black";
         c.style.background="#FFF";
@@ -638,9 +638,8 @@ function main(){
         c.style.background="#000";
       }
       ctx.font="50px bold"
-      ctx.fillText("BRING",100,350);
-      ctx.fillText("THE",175,400);
-      ctx.fillText("SCENE",250,450);
+      ctx.fillText("BRING",100,400);
+      ctx.fillText("DEMOS",250,450);
       ctx.fillText("BACK",325,500);
       ctx.font="20px sans-serif bold";
       ctx.fillStyle="white"
@@ -677,7 +676,7 @@ function main(){
   }
 
   // Effect3 (moretunnel)
-  else if (beat<147){
+  else if (beat<146){
     if (tunn2init==0){subcycle=1;tunn2init=1};
     ctx.fillText("Square tunnel goes here",250,300);
   }
