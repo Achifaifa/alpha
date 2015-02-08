@@ -47,6 +47,17 @@ function drawcube(x,y,side,rot){
   draw();
 }
 
+// TO-DO
+function threedcube(step){
+  /*
+  Draws an actual rotating 3D cube
+
+  step: clock signal
+
+  Position fixed to 300,300 and size fixed to 60
+  */
+}
+
 function drawline(x1,y1,x2,y2){
   /*
   Draws a line between two points
@@ -611,11 +622,11 @@ function main(){
     if (beat<12){
       breaktitles(150,200,"Stage7",subcycle);
     }
-    else if (beat>=12 && beat<21){
-      breaktitles(150,200,"Achifaifa",subcycle-125);
+    else if (beat<21){
+      breaktitles(150,200,"Achifaifa",subcycle-200);
     }
     else if (beat>=21){
-      breaktitles(150,275,"Present",subcycle-275);
+      breaktitles(150,275,"Present",subcycle-350);
     }
   }
 
@@ -627,7 +638,12 @@ function main(){
     if (subcycle<250){sinescroll(200,"JS!",(subcycle*2)-200,3,8,20); }
     if (subcycle<320){sinescroll(250,"Canvas powered!",(subcycle*2)-150,2,5,20); }
     if (subcycle<280){sinescroll(300,"Demoscene in your browser!",(subcycle*3)-225,2,7,20);}
-    if (subcycle>200){sinescroll(200,"Made with love for",(subcycle*1.6)-270,2,5,20);}
+    if (subcycle>200){
+      sinescroll(200,"Made with      for",(subcycle*1.3)-270,2,5,20);
+      ctx.fillStyle="red";
+      sinescroll(200,"          love",(subcycle*1.3)-270,2,5,20);
+      ctx.fillStyle="white";
+    }
     if (beat>=79){
       if (cycle%2==0){
         ctx.fillStyle="black";
@@ -666,6 +682,9 @@ function main(){
       posxx=300+(Math.sin(Math.PI*(cycle+100)/2.3*2/45+(Math.PI/4))*425)/2;
       posyy=300+(Math.cos(Math.PI*(cycle+100)/3.4*2/45+(Math.PI/4))*425)/2;
       drawcube(posxx,posyy,100,Math.PI*(cycle+100)*2/45);
+      if (beat>=105){
+        ctx.fillText("Actual rotating cube here",225,300);
+      }
     }
   }
 
