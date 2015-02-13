@@ -135,20 +135,24 @@ function tunnel(x,y,type,step){
   not the shape of the entire tunnel
   */
 
-  step=step%6
+  step=step
+  step=step%10
 
   // If there are less than 20 sections, add a new one
-  if (tunnelpool.length<7){
+  if (tunnelpool.length<=10){
     tunnelpool.push({"shapev":type, "secstep":1})
   }
 
   for (i=0; i<tunnelpool.length; i++){
-    sectionsize=Math.pow(tunnelpool[i].secstep,3);
+    sectionsize=Math.pow(tunnelpool[i].secstep,2);
     if (tunnelpool[i].shapev==1){
-      drawsphere(x,y,sectionsize)
-      tunnelpool[i].secstep++
+      drawsphere(x,y,sectionsize) 
     }
-    if (sectionsize>250){
+    if (tunnelpool[i].shapev==4){
+      drawcube(x-sectionsize/8,y-sectionsize/8,sectionsize,0)
+    }
+    tunnelpool[i].secstep++
+    if (sectionsize>500){
       tunnelpool.splice(i,i)
     }
   }
@@ -581,7 +585,7 @@ tunninit=0;
 tunn2init=0;
 
 // Testing
-test=1;
+test=0;
 
 function main(){
   /*
@@ -606,7 +610,7 @@ function main(){
   //octopus(cycle);
 
   // [WIP] Tunnel
-  tunnel(300,300,1,cycle);
+  // tunnel(300,300,4,cycle);
 
   // Text display tests
   // [Nope] Bezier scroll
@@ -679,7 +683,7 @@ function main(){
   }
 
   // Effect1 (cubes)
-  else if (beat<113){
+  else if (beat<146){
     if (cubeinit==0){subcycle=1;cubeinit=1};
     posx=300+(Math.sin(Math.PI*cycle/2.3*2/45+(Math.PI/4))*425)/2;
     posy=300+(Math.cos(Math.PI*cycle/1.3*2/45+(Math.PI/4))*425)/2;
@@ -691,20 +695,14 @@ function main(){
       drawcube(posxx,posyy,100,Math.PI*(cycle+100)*2/45);
       if (beat>=105){
         ctx.fillText("Actual rotating cube here",225,300);
+        if (beat>=130){
+          tunnel(300,300,4,cycle)
+        }
+        else if (beat>=113){
+          tunnel(300,300,1,cycle)
+        }
       }
     }
-  }
-
-  // Effect2 (tunnel)
-  else if (beat<130){
-    if (tunninit==0){subcycle=1;tunninit=1};
-    ctx.fillText("Round tunnel goes here",250,300);
-  }
-
-  // Effect3 (moretunnel)
-  else if (beat<146){
-    if (tunn2init==0){subcycle=1;tunn2init=1};
-    ctx.fillText("Square tunnel goes here",250,300);
   }
 
   // Wut
