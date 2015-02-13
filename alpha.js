@@ -118,33 +118,40 @@ function sinescroll(y,text,step,speed,oscil,space){
 
 // TO-DO: Fix continuity
 // Use the same technique as in the starfield or snow
-function tunnel(x,y,rad,step){
+tunnelpool=[]
+function tunnel(x,y,type,step){
   /*
   Draws a tunnel-like effect
+
   x,y: position
-  rad: Tunnel radius
+  type: geometry of the sections
+    1.- round
+    3.- triangle
+    4.- square
+    (n) polygon
   step: clock signal
+
+  The type of the tunnel defines the shape of new sections being generated, 
+  not the shape of the entire tunnel
   */
 
-  ctx.beginPath();
-  step=step/4;
-  for (i=1;i<30;i++){
-    drawsphere(
-      x+60*Math.sin(cycle/3)+i/60*Math.sin(Math.PI/5)*600*Math.sin(step+(i*Math.PI/524)/(Math.PI/40)),
-      y+60*Math.cos(cycle/4)+i/60*Math.sin(Math.PI/5)*600*Math.cos(step+(i*Math.PI/524)/(Math.PI/40)),
-      rad*step*(1+(i/3)));
+  step=step%6
+
+  // If there are less than 20 sections, add a new one
+  if (tunnelpool.length<7){
+    tunnelpool.push({"shapev":type, "secstep":1})
   }
-  draw();
-}
 
-// TO-DO (Copypaste tunnel code with squares. Or maybe add parameter)
-function sqtunnel(x,y,xsize,ysize,step){
-  /*
-  Draws a rectangular tunnel
-  x,y: Position
-  xsize, ysize: Horizontal and vertical size of the tunnel
-  step: clock signal
-  */
+  for (i=0; i<tunnelpool.length; i++){
+    sectionsize=Math.pow(tunnelpool[i].secstep,3);
+    if (tunnelpool[i].shapev==1){
+      drawsphere(x,y,sectionsize)
+      tunnelpool[i].secstep++
+    }
+    if (sectionsize>250){
+      tunnelpool.splice(i,i)
+    }
+  }
 }
 
 // TO-DO: Fix partial transparency
@@ -574,7 +581,7 @@ tunninit=0;
 tunn2init=0;
 
 // Testing
-test=0;
+test=1;
 
 function main(){
   /*
@@ -598,8 +605,8 @@ function main(){
   // [WIP] Octopus
   //octopus(cycle);
 
-  // [Mostly OK] GE logo
-  // gelogo(cycle);
+  // [WIP] Tunnel
+  tunnel(300,300,1,cycle);
 
   // Text display tests
   // [Nope] Bezier scroll
@@ -702,11 +709,10 @@ function main(){
 
   // Wut
   else {ctx.fillText("END OF TRACK LOL",300,300)}
-
+  }
   updatebeat();
   cycle++;
   subcycle++
-  }
 }
 
 // Other functions for menus and shit
