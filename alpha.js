@@ -126,16 +126,13 @@ function tunnel(x,y,type,step){
   x,y: position
   type: geometry of the sections
     1.- round
-    3.- triangle
     4.- square
-    (n) polygon
   step: clock signal
 
   The type of the tunnel defines the shape of new sections being generated, 
   not the shape of the entire tunnel
   */
 
-  step=step
   step=step%10
 
   // If there are less than 20 sections, add a new one
@@ -451,10 +448,18 @@ function torsion(step){
   step: Clock signal
   */
 
-  // Calculate side face separation
-  // Draw straight lines
-  // Draw bezier curves joining lines
-  // ??? 
+  drawline(250,0,250,250);
+  drawline(300,0,300,250);
+  ctx.moveTo(250,250)
+  ctx.bezierCurveTo(250,300,275,275,275,350);
+  draw();
+  ctx.moveTo(300,250)
+  ctx.bezierCurveTo(300,300,325,275,325,350);
+  draw();
+  drawline(275,350,275,600);
+  drawline(325,350,325,600);
+  
+
 }
 
 function snow(step,stop){
@@ -585,7 +590,7 @@ tunninit=0;
 tunn2init=0;
 
 // Testing
-test=0;
+test=1;
 
 function main(){
   /*
@@ -608,6 +613,9 @@ function main(){
   
   // [WIP] Octopus
   //octopus(cycle);
+
+  // [WIP] Torsion
+  torsion(cycle);
 
   // [WIP] Tunnel
   // tunnel(300,300,4,cycle);
