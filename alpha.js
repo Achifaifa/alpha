@@ -448,16 +448,24 @@ function torsion(step){
   step: Clock signal
   */
 
-  drawline(250,0,250,250);
-  drawline(300,0,300,250);
-  ctx.moveTo(250,250)
-  ctx.bezierCurveTo(250,300,275,275,275,350);
+  xtpos=300+(Math.sin(Math.PI*step/2.2*2/35)*100)+(Math.sin(Math.PI*step/2.3*2/45+(Math.PI/4))*225)/2;
+  ytpos=250+(Math.cos(Math.PI*step/2.2*2/35)*100)+(Math.sin(Math.PI*step/2.3*2/45+(Math.PI/4))*225)/2;
+  xbpos=300+(Math.sin(Math.PI*step/3.3*2/35)*100)+(Math.sin(Math.PI*step/1.6*2/45+(Math.PI/4))*225)/2;
+  ybpos=350+(Math.cos(Math.PI*step/3.3*2/35)*100)+(Math.sin(Math.PI*step/1.6*2/45+(Math.PI/4))*225)/2;
+
+  // Top segment
+  drawline(xtpos,0,xtpos,ytpos);
+  drawline(xtpos+50,0,xtpos+50,ytpos);
+  // Joint
+  ctx.moveTo(xtpos,ytpos)
+  ctx.bezierCurveTo(xtpos,ytpos+50,xbpos+25,ybpos-25,xbpos+25,ybpos);
   draw();
-  ctx.moveTo(300,250)
-  ctx.bezierCurveTo(300,300,325,275,325,350);
+  ctx.moveTo(xtpos+50,ytpos)
+  ctx.bezierCurveTo(xtpos+50,ytpos+50,xbpos+75,ybpos-25,xbpos+75,ybpos);
   draw();
-  drawline(275,350,275,600);
-  drawline(325,350,325,600);
+  // Botton segment
+  drawline(xbpos+25,ybpos,xbpos+25,ybpos+600);
+  drawline(xbpos+75,ybpos,xbpos+75,ybpos+600);
   
 
 }
