@@ -451,7 +451,7 @@ function torsion(step){
   xtpos=300+(Math.sin(Math.PI*step/2.2*2/35)*100)+(Math.sin(Math.PI*step/2.3*2/45+(Math.PI/4))*225)/2;
   ytpos=250+(Math.cos(Math.PI*step/2.2*2/35)*100)+(Math.sin(Math.PI*step/2.3*2/45+(Math.PI/4))*225)/2;
   xbpos=300+(Math.sin(Math.PI*step/3.3*2/35)*100)+(Math.sin(Math.PI*step/1.6*2/45+(Math.PI/4))*225)/2;
-  ybpos=350+(Math.cos(Math.PI*step/3.3*2/35)*100)+(Math.sin(Math.PI*step/1.6*2/45+(Math.PI/4))*225)/2;
+  ybpos=450+(Math.cos(Math.PI*step/3.3*2/35)*100)+(Math.sin(Math.PI*step/1.6*2/45+(Math.PI/4))*225)/2;
 
   // Top segment
   drawline(xtpos,0,xtpos,ytpos);
@@ -598,7 +598,7 @@ tunninit=0;
 tunn2init=0;
 
 // Testing
-test=1;
+test=0;
 
 function main(){
   /*
@@ -623,7 +623,7 @@ function main(){
   //octopus(cycle);
 
   // [WIP] Torsion
-  torsion(cycle);
+  // torsion(cycle);
 
   // [WIP] Tunnel
   // tunnel(300,300,4,cycle);
@@ -677,7 +677,7 @@ function main(){
         c.style.background="#FFF";
       }
       else if (cycle%2!=0){
-        ctx.fillStyle="white"
+        ctx.fillStyle="white";
         c.style.background="#000";
       }
       ctx.font="50px bold"
@@ -704,7 +704,7 @@ function main(){
     posx=300+(Math.sin(Math.PI*cycle/2.3*2/45+(Math.PI/4))*425)/2;
     posy=300+(Math.cos(Math.PI*cycle/1.3*2/45+(Math.PI/4))*425)/2;
     drawcube(posx,posy,100,Math.PI*(cycle)*2/45);
-    sinescroll(500,"Rotating cubes!                                 (Top view)",subcycle,4,5,20)
+    sinescroll(500,"Rotating cubes!                                 (Top view)",subcycle,4,5,20);
     if (beat>=96){
       posxx=300+(Math.sin(Math.PI*(cycle+100)/2.3*2/45+(Math.PI/4))*425)/2;
       posyy=300+(Math.cos(Math.PI*(cycle+100)/3.4*2/45+(Math.PI/4))*425)/2;
@@ -712,21 +712,23 @@ function main(){
       if (beat>=105){
         ctx.fillText("Actual rotating cube here",225,300);
         if (beat>=130){
-          tunnel(300,300,4,cycle)
+          //tunnel(300,300,4,cycle);
+          ctx.fillText("Tunnel disabled",10,50);
         }
         else if (beat>=113){
-          tunnel(300,300,1,cycle)
+          //tunnel(300,300,1,cycle);
+          ctx.fillText("Tunnel disabled",10,50);
         }
       }
     }
   }
 
   // Wut
-  else {ctx.fillText("END OF TRACK LOL",300,300)}
+  else {torsion(cycle)}
   }
   updatebeat();
   cycle++;
-  subcycle++
+  subcycle++;
 }
 
 // Other functions for menus and shit
