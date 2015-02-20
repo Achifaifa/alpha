@@ -47,15 +47,37 @@ function drawcube(x,y,side,rot){
   draw();
 }
 
-// TO-DO
 function threedcube(step){
   /*
   Draws an actual rotating 3D cube
 
   step: clock signal
 
-  Position fixed to 300,300 and size fixed to 60
+  Position fixed to 300,300 and size fixed to 100
+   Define a cube with an array of points
+      
+       1------2
+       |\     |\
+       | 3----|-4
+       | |    | |
+       5-|----6 |
+        \|     \|
+         7------8
   */
+
+  rotcubex=300
+  rotcubey=300
+  rotcubes=100
+  // Initial state
+  drawcube(rotcubex-(rotcubes/2),rotcubey-(rotcubes/2),2,0);
+  drawcube(rotcubex-(rotcubes/2),rotcubey+(rotcubes/2),2,0);
+  drawcube(rotcubex+(rotcubes/2),rotcubey-(rotcubes/2),2,0);
+  drawcube(rotcubex+(rotcubes/2),rotcubey+(rotcubes/2),2,0);
+  drawcube(rotcubex-(rotcubes),rotcubey-(rotcubes),2,0);
+  drawcube(rotcubex-(rotcubes),rotcubey+(rotcubes),2,0);
+  drawcube(rotcubex+(rotcubes),rotcubey-(rotcubes),2,0);
+  drawcube(rotcubex+(rotcubes),rotcubey+(rotcubes),2,0);
+
 }
 
 function drawline(x1,y1,x2,y2){
@@ -595,7 +617,7 @@ tunninit=0;
 tunn2init=0;
 
 // Testing
-test=0;
+test=1;
 
 function main(){
   /*
@@ -624,6 +646,9 @@ function main(){
 
   // [WIP] Tunnel
   // tunnel(300,300,4,cycle);
+
+  // [WIP] Cube
+  threedcube(cycle);
 
   // Text display tests
   // [Nope] Bezier scroll
