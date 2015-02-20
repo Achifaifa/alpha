@@ -517,12 +517,9 @@ function seascape(step){
 }
 
 // TO-DO
-function gelogo(element){
+function gelogo(){
   /*
   Draws the GE logo with the \o/ dudes
-
-  element: number of elements drawn.
-  Speed controlled externally
   */
 
   ctx.font="50px sans-serif bold";
@@ -692,7 +689,7 @@ function main(){
     else {
       snow(subcycle,1);
       if (beat>63){
-        gelogo(beat);
+        gelogo();
       }
     }
     //if (beat>48){subcycle=subcycle-2};
