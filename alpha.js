@@ -68,17 +68,27 @@ function threedcube(step){
   rotcubex=300
   rotcubey=300
   rotcubes=100
-  // Initial state (reference)
-  drawcube(rotcubex-(rotcubes/2),rotcubey-(rotcubes/2),2,0);
-  drawcube(rotcubex-(rotcubes/2),rotcubey+(rotcubes/2),2,0);
-  drawcube(rotcubex+(rotcubes/2),rotcubey-(rotcubes/2),2,0);
-  drawcube(rotcubex+(rotcubes/2),rotcubey+(rotcubes/2),2,0);
-  drawcube(rotcubex-(rotcubes),rotcubey-(rotcubes),2,0);
-  drawcube(rotcubex-(rotcubes),rotcubey+(rotcubes),2,0);
-  drawcube(rotcubex+(rotcubes),rotcubey-(rotcubes),2,0);
-  drawcube(rotcubex+(rotcubes),rotcubey+(rotcubes),2,0);
   // Draw moving points
-  
+  cubepoint1=[rotcubex+Math.cos(step*Math.PI/90)*100,rotcubey-rotcubes*3/5+Math.sin(step*Math.PI/90)*30];
+  cubepoint2=[rotcubex+Math.cos((step+45)*Math.PI/90)*100,rotcubey-rotcubes*3/5+Math.sin((step+45)*Math.PI/90)*30];
+  cubepoint3=[rotcubex+Math.cos((step+90)*Math.PI/90)*100,rotcubey-rotcubes*3/5+Math.sin((step+90)*Math.PI/90)*30];
+  cubepoint4=[rotcubex+Math.cos((step+135)*Math.PI/90)*100,rotcubey-rotcubes*3/5+Math.sin((step+135)*Math.PI/90)*30];
+  cubepoint5=[rotcubex+Math.cos(step*Math.PI/90)*100,rotcubey+rotcubes*3/5+Math.sin(step*Math.PI/90)*30];
+  cubepoint6=[rotcubex+Math.cos((step+45)*Math.PI/90)*100,rotcubey+rotcubes*3/5+Math.sin((step+45)*Math.PI/90)*30];
+  cubepoint7=[rotcubex+Math.cos((step+90)*Math.PI/90)*100,rotcubey+rotcubes*3/5+Math.sin((step+90)*Math.PI/90)*30];
+  cubepoint8=[rotcubex+Math.cos((step+135)*Math.PI/90)*100,rotcubey+rotcubes*3/5+Math.sin((step+135)*Math.PI/90)*30];
+  drawline(cubepoint1[0],cubepoint1[1],cubepoint2[0],cubepoint2[1]);
+  drawline(cubepoint2[0],cubepoint2[1],cubepoint3[0],cubepoint3[1]);
+  drawline(cubepoint3[0],cubepoint3[1],cubepoint4[0],cubepoint4[1]);
+  drawline(cubepoint4[0],cubepoint4[1],cubepoint1[0],cubepoint1[1]);
+  drawline(cubepoint5[0],cubepoint5[1],cubepoint6[0],cubepoint6[1]);
+  drawline(cubepoint6[0],cubepoint6[1],cubepoint7[0],cubepoint7[1]);
+  drawline(cubepoint7[0],cubepoint7[1],cubepoint8[0],cubepoint8[1]);
+  drawline(cubepoint8[0],cubepoint8[1],cubepoint5[0],cubepoint5[1]);
+  drawline(cubepoint1[0],cubepoint1[1],cubepoint5[0],cubepoint5[1]);
+  drawline(cubepoint2[0],cubepoint2[1],cubepoint6[0],cubepoint6[1]);
+  drawline(cubepoint3[0],cubepoint3[1],cubepoint7[0],cubepoint7[1]);
+  drawline(cubepoint4[0],cubepoint4[1],cubepoint8[0],cubepoint8[1]);
 
 }
 
@@ -619,7 +629,7 @@ tunninit=0;
 tunn2init=0;
 
 // Testing
-test=1;
+test=0;
 
 function main(){
   /*
@@ -650,7 +660,7 @@ function main(){
   // tunnel(300,300,4,cycle);
 
   // [WIP] Cube
-  threedcube(cycle);
+  //threedcube(cycle);
 
   // Text display tests
   // [Nope] Bezier scroll
@@ -734,7 +744,7 @@ function main(){
       posyy=300+(Math.cos(Math.PI*(cycle+100)/3.4*2/45+(Math.PI/4))*425)/2;
       drawcube(posxx,posyy,100,Math.PI*(cycle+100)*2/45);
       if (beat>=105){
-        ctx.fillText("Actual rotating cube here",225,300);
+        threedcube(cycle);
         if (beat>=130){
           //tunnel(300,300,4,cycle);
           ctx.fillText("Tunnel disabled",10,50);
