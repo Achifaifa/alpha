@@ -68,7 +68,7 @@ function threedcube(step){
   rotcubex=300
   rotcubey=300
   rotcubes=100
-  // Initial state
+  // Initial state (reference)
   drawcube(rotcubex-(rotcubes/2),rotcubey-(rotcubes/2),2,0);
   drawcube(rotcubex-(rotcubes/2),rotcubey+(rotcubes/2),2,0);
   drawcube(rotcubex+(rotcubes/2),rotcubey-(rotcubes/2),2,0);
@@ -77,6 +77,8 @@ function threedcube(step){
   drawcube(rotcubex-(rotcubes),rotcubey+(rotcubes),2,0);
   drawcube(rotcubex+(rotcubes),rotcubey-(rotcubes),2,0);
   drawcube(rotcubex+(rotcubes),rotcubey+(rotcubes),2,0);
+  // Draw moving points
+  
 
 }
 
