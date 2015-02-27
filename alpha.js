@@ -215,39 +215,46 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   */
 
   // Draw leading segment
-  ctx.beginPath();
-  ctx.strokeStyle="black";
-  drawline(
-    x1+(step*((x2-x1)/speed)),
-    y1+(step*((y2-y1)/speed)),
-    x1+((step+1)*(x2-x1)/speed),
-    y1+((step+1)*(y2-y1)/speed)
-  );
+  if (step<=speed){
+    ctx.beginPath();
+    ctx.strokeStyle="white";
+    drawline(
+      x1+(step*((x2-x1)/speed)),
+      y1+(step*((y2-y1)/speed)),
+      x1+((step+1)*(x2-x1)/speed),
+      y1+((step+1)*(y2-y1)/speed)
+    );
+  }
 
   // Draw trace
   if (trace==1){
     ctx.beginPath();
 
     // Define trace transparency
-    if (step>speed*2) {
-      transp=0;
+    if (step>speed) {
+      transp=4/(step-speed);
     } 
     else {
-      transp=8/step;
+      transp=1;
     }
 
     // Define strokeStyle, draw trace
     ctx.strokeStyle="rgba("+R+","+G+","+B+","+transp+")";
+    tracexoffs=(step)*((x2-x1)/speed);
+    if (step>speed){tracexoffs=x2-x1}
+    traceyoffs=(step)*((y2-y1)/speed);
+    if (step>speed){traceyoffs=y2-y1}
     drawline(
       x1,
       y1,
-      x1+(step)*((x2-x1)/speed),
-      y1+(step)*((y2-y1)/speed)
+      x1+tracexoffs,
+      y1+traceyoffs
     );
     draw();
     ctx.strokeStyle="black";
   }
   draw();
+  ctx.strokeStyle="white";
 }
 
 function markcoords(x,y){
@@ -543,6 +550,46 @@ function meatballs(number, step){
   */
 }
 
+explpool=[];
+function particlexplosion(x,y,step){
+  /* 
+  Draws an exploding thingy. 
+  Combine with traceray for firework FX
+
+  x,y: Position in canvas
+  step: clock signal
+  */
+
+  // If the pool is empty, fill it with particle objects
+  // Each particle object has initial x and y speeds and 
+  // a random start delay (from 0 to 10 cycles)
+  if (explpool.length==0){
+    for (i=0; i<150; i++){
+      explpool.push({"vs":(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6, 
+                     "hs":(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6,
+                     "delay":Math.random()*20})
+    }
+  }
+
+  // Draw particle function
+  function drawexpart(object, step){
+    if (object.delay>=step){
+      object.delay+=20
+      expartxpos=x+object.hs*step;
+      expartypos=y+object.vs*step;
+      drawcube(expartxpos,expartypos,2,0)
+    }
+  }
+
+  // For each particle, check if it's their time 
+  // If it is (Or the delay is set to 999 to show they are
+  // already moving), draw them
+  for (i=0; i<explpool.length; i++){
+    drawexpart(explpool[i],step);
+  }
+
+}
+
 function torsion(step){
   /*
   Draws some twisting bars
@@ -709,10 +756,6 @@ function main(){
 
   // Drive scene
   // sunsetdrive(cycle);
-
-  // Traceray test
-  // subcycle=cycle%70;
-  // raytrace(0,300,600,300,10,1,0,128,255,subcycle);
   
   // [WIP] Octopus
   // octopus(cycle);
@@ -724,25 +767,26 @@ function main(){
   // if (beat%4<=1){tunnel(300,300,1,cycle);}
   // if (beat%4>1){tunnel(300,300,4,cycle);}
 
-  // [WIP] wat
-  laz0r(Math.floor(cycle/5));
-  laz0r2(500,100,"green",cycle);
-  laz0r2(-10,400,"green",cycle);
-  threedcube(cycle);
-  if (beat%2==0){ctx.fillText("_(^o^\\)",265,300);}
-  else if (beat%2==1){ctx.fillText("\\(^o^_)",265,300);}
+  // [WIP] Firewerk
+  subcycle=cycle%150;
+  raytrace(100,500,500,100,15,1,0,128,255,subcycle);
+  if (subcycle==20){partcycle=0}
+  if (subcycle>20){
+    particlexplosion(500,100,partcycle)
+    partcycle++
+  }
 
-  // Cube
+  // [WIP] wat
+  // laz0r(Math.floor(cycle/5));
+  // laz0r2(500,100,"green",cycle);
+  // laz0r2(-10,400,"green",cycle);
   // threedcube(cycle);
+  // if (beat%2==0){ctx.fillText("_(^o^\\)",265,300);}
+  // else if (beat%2==1){ctx.fillText("\\(^o^_)",265,300);}
 
   // Text display tests
   // [Nope] Bezier scroll
   // bezier(250,"bezier text",40,10,cycle%100);
-
-  // [WIP] Bouncescroll
-  // bouncescroll(300,"Test              ",cycle,100);
-  // bouncescroll(300,"     bounce       ",cycle-50,150);
-  // bouncescroll(300,"            scroll",cycle-100,50);
 
   if (test==0){
   // Actual demo 
@@ -824,8 +868,7 @@ function main(){
       if (beat>=105){
         threedcube(cycle);
         if (beat>=130){
-          // tunnel(300,300,4,cycle);
-          ctx.fillText("Tunnel disabled",10,50);
+          ctx.fillText("FILLER 1",10,50);
         }
         else if (beat>=113){
           // tunnel(300,300,1,cycle);
@@ -852,7 +895,7 @@ function demo(ev){
     clearInterval();
     tempdate=new Date();
     lastdate=tempdate.getTime();
-    // if (test==0){track.play();}
+    if (test==0){track.play();}
     setInterval(main,1000/fps);
   }
 }
