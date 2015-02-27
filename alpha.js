@@ -241,9 +241,9 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
     // Define strokeStyle, draw trace
     ctx.strokeStyle="rgba("+R+","+G+","+B+","+transp+")";
     tracexoffs=(step)*((x2-x1)/speed);
-    if (step>speed){tracexoffs=x2-x1}
+    if (step>=speed){tracexoffs=x2-x1}
     traceyoffs=(step)*((y2-y1)/speed);
-    if (step>speed){traceyoffs=y2-y1}
+    if (step>=speed){traceyoffs=y2-y1}
     drawline(
       x1,
       y1,
@@ -550,13 +550,32 @@ function meatballs(number, step){
   */
 }
 
+function firework(x1,y1,x2,y2,RR,GG,BB,step){
+  /*
+  Draws a firework
+
+  x1, y1: Launch point
+  x2, y2: Explosion point
+  R,G,B: Colour of trace and explosion particles
+  step: guess what this does
+  */
+
+  raytrace(100,500,500,100,15,1,RR,GG,BB,step);
+  if (step==20){partcycle=0}
+  if (step>20){
+    particlexplosion(500,100,RR,GG,BB,partcycle)
+    partcycle++
+  }
+}
+
 explpool=[];
-function particlexplosion(x,y,step){
+function particlexplosion(x,y,R,G,B,step){
   /* 
   Draws an exploding thingy. 
   Combine with traceray for firework FX
 
   x,y: Position in canvas
+  R, G, B: Colour
   step: clock signal
   */
 
@@ -567,14 +586,16 @@ function particlexplosion(x,y,step){
     for (i=0; i<150; i++){
       explpool.push({"vs":(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6, 
                      "hs":(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6,
-                     "delay":Math.random()*20})
+                     "delay":Math.random()*20,
+                     "die":40+Math.random()*50})
     }
   }
 
   // Draw particle function
   function drawexpart(object, step){
-    if (object.delay>=step){
-      object.delay+=20
+    if (object.delay>=step && object.die>step){
+      object.delay=999
+      object.die--
       expartxpos=x+object.hs*step;
       expartypos=y+object.vs*step;
       drawcube(expartxpos,expartypos,2,0)
@@ -584,9 +605,11 @@ function particlexplosion(x,y,step){
   // For each particle, check if it's their time 
   // If it is (Or the delay is set to 999 to show they are
   // already moving), draw them
+  ctx.strokeStyle="rgba("+R+","+G+","+B+",1)";
   for (i=0; i<explpool.length; i++){
     drawexpart(explpool[i],step);
   }
+  ctx.strokeStyle="white"
 
 }
 
@@ -767,14 +790,8 @@ function main(){
   // if (beat%4<=1){tunnel(300,300,1,cycle);}
   // if (beat%4>1){tunnel(300,300,4,cycle);}
 
-  // [WIP] Firewerk
-  subcycle=cycle%150;
-  raytrace(100,500,500,100,15,1,0,128,255,subcycle);
-  if (subcycle==20){partcycle=0}
-  if (subcycle>20){
-    particlexplosion(500,100,partcycle)
-    partcycle++
-  }
+  // Fireworks
+  firework(100,500,500,100,256,128,0,cycle)
 
   // [WIP] wat
   // laz0r(Math.floor(cycle/5));
