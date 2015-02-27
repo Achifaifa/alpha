@@ -89,7 +89,6 @@ function threedcube(step){
   drawline(cubepoint2[0],cubepoint2[1],cubepoint6[0],cubepoint6[1]);
   drawline(cubepoint3[0],cubepoint3[1],cubepoint7[0],cubepoint7[1]);
   drawline(cubepoint4[0],cubepoint4[1],cubepoint8[0],cubepoint8[1]);
-
 }
 
 function drawline(x1,y1,x2,y2){
@@ -203,7 +202,6 @@ function tunnel(x,y,type,step){
   }
 }
 
-// TO-DO: Fix partial transparency
 function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   /*
   Draws a fast-moving particle that leaves a trail
@@ -215,7 +213,7 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   */
 
   // Draw leading segment
-  if (step<=speed){
+  if (step<speed){
     ctx.beginPath();
     ctx.strokeStyle="white";
     drawline(
@@ -466,7 +464,6 @@ function starfield(stars,speed,sstep,die){
   for (i=0; i<starsobj.size; i++){
     movestar(starsobj[i]);
   }
-
 }
 
 laz0rcolours=["RED","GREEN","BLUE","YELLOW","PINK","#FABADA","#C0FFEE","#FFF000"]
@@ -550,7 +547,7 @@ function meatballs(number, step){
   */
 }
 
-function firework(x1,y1,x2,y2,RR,GG,BB,step){
+function firework(x1,y1,x2,y2,RR,GG,BB,pooln,step){
   /*
   Draws a firework
 
@@ -560,16 +557,15 @@ function firework(x1,y1,x2,y2,RR,GG,BB,step){
   step: guess what this does
   */
 
-  raytrace(100,500,500,100,15,1,RR,GG,BB,step);
-  if (step==20){partcycle=0}
-  if (step>20){
-    particlexplosion(500,100,RR,GG,BB,partcycle)
-    partcycle++
+  raytrace(x1,y1,x2,y2,15,1,RR,GG,BB,step);
+  if (step==20){eval("partcycle"+pooln+"=0")}
+  if (step>=20){
+    particlexplosion(x2,y2,RR,GG,BB,pooln,eval("partcycle"+pooln));
+    eval("partcycle"+pooln+"++");
   }
 }
 
-explpool=[];
-function particlexplosion(x,y,R,G,B,step){
+function particlexplosion(x,y,R,G,B,pooln,step){
   /* 
   Draws an exploding thingy. 
   Combine with traceray for firework FX
@@ -582,35 +578,32 @@ function particlexplosion(x,y,R,G,B,step){
   // If the pool is empty, fill it with particle objects
   // Each particle object has initial x and y speeds and 
   // a random start delay (from 0 to 10 cycles)
-  if (explpool.length==0){
+  if (eval("explpool"+pooln+".length==0")){
     for (i=0; i<150; i++){
-      explpool.push({"vs":(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6, 
-                     "hs":(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6,
-                     "delay":Math.random()*20,
-                     "die":40+Math.random()*50})
+      eval("explpool"+pooln+".push({'vs':(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6, \
+                           'hs':(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6, \
+                           'delay':Math.random()*20, \
+                           'die':20+Math.random()*50})");
     }
   }
 
   // Draw particle function
   function drawexpart(object, step){
-    if (object.delay>=step && object.die>step){
-      object.delay=999
-      object.die--
+    if (object.delay<step && object.die>step){
       expartxpos=x+object.hs*step;
       expartypos=y+object.vs*step;
-      drawcube(expartxpos,expartypos,2,0)
+      ctx.fillRect(expartxpos,expartypos,2,2)
     }
   }
 
   // For each particle, check if it's their time 
   // If it is (Or the delay is set to 999 to show they are
   // already moving), draw them
-  ctx.strokeStyle="rgba("+R+","+G+","+B+",1)";
-  for (i=0; i<explpool.length; i++){
-    drawexpart(explpool[i],step);
+  ctx.fillStyle="rgba("+R+","+G+","+B+",1)";
+  for (i=0; eval("i<explpool"+pooln+".length"); i++){
+    eval("drawexpart(explpool"+pooln+"[i],step)");
   }
-  ctx.strokeStyle="white"
-
+  ctx.fillStyle="white"
 }
 
 function torsion(step){
@@ -637,8 +630,6 @@ function torsion(step){
   // Botton segment
   drawline(xbpos+25,ybpos,xbpos+25,ybpos+600);
   drawline(xbpos+75,ybpos,xbpos+75,ybpos+600);
-  
-
 }
 
 function snow(step,stop){
@@ -765,6 +756,11 @@ tunn2init=0;
 // Testing
 test=1;
 
+// Effect vars
+for (i=1; i<10; i++){
+  eval("explpool"+i+"=[]")
+}
+
 function main(){
   /*
   Main function
@@ -790,9 +786,6 @@ function main(){
   // if (beat%4<=1){tunnel(300,300,1,cycle);}
   // if (beat%4>1){tunnel(300,300,4,cycle);}
 
-  // Fireworks
-  firework(100,500,500,100,256,128,0,cycle)
-
   // [WIP] wat
   // laz0r(Math.floor(cycle/5));
   // laz0r2(500,100,"green",cycle);
@@ -801,13 +794,19 @@ function main(){
   // if (beat%2==0){ctx.fillText("_(^o^\\)",265,300);}
   // else if (beat%2==1){ctx.fillText("\\(^o^_)",265,300);}
 
+  firework(200,600,250,100,256,128,000,1,cycle);
+  firework(300,600,275,075,256,256,000,2,cycle-4);
+  firework(400,600,410,120,000,128,200,3,cycle-13);
+  firework(500,600,550,110,206,128,200,4,cycle-15);
+  firework(100,600,070,140,128,128,256,5,cycle-20);
+
   // Text display tests
   // [Nope] Bezier scroll
   // bezier(250,"bezier text",40,10,cycle%100);
 
-  if (test==0){
   // Actual demo 
-
+  if (test==0){
+  
   // Intro
   if (beat<32){
     if (introinit==0){subcycle=1;introinit=1};
