@@ -17,7 +17,7 @@ function drawsphere(x,y,rad){
   */
 
   ctx.beginPath();
-  ctx.arc(x,y,rad,0,2*Math.PI,false);
+  ctx.arc(x,y,rad,0,6.29,false);
   draw();
 }
 
@@ -69,14 +69,14 @@ function threedcube(step){
   rotcubey=300
   rotcubes=100
   // Draw moving points
-  cubepoint1=[rotcubex+Math.cos(step*Math.PI/90)*100,rotcubey-rotcubes*3/5+Math.sin(step*Math.PI/90)*30];
-  cubepoint2=[rotcubex+Math.cos((step+45)*Math.PI/90)*100,rotcubey-rotcubes*3/5+Math.sin((step+45)*Math.PI/90)*30];
-  cubepoint3=[rotcubex+Math.cos((step+90)*Math.PI/90)*100,rotcubey-rotcubes*3/5+Math.sin((step+90)*Math.PI/90)*30];
-  cubepoint4=[rotcubex+Math.cos((step+135)*Math.PI/90)*100,rotcubey-rotcubes*3/5+Math.sin((step+135)*Math.PI/90)*30];
-  cubepoint5=[rotcubex+Math.cos(step*Math.PI/90)*100,rotcubey+rotcubes*3/5+Math.sin(step*Math.PI/90)*30];
-  cubepoint6=[rotcubex+Math.cos((step+45)*Math.PI/90)*100,rotcubey+rotcubes*3/5+Math.sin((step+45)*Math.PI/90)*30];
-  cubepoint7=[rotcubex+Math.cos((step+90)*Math.PI/90)*100,rotcubey+rotcubes*3/5+Math.sin((step+90)*Math.PI/90)*30];
-  cubepoint8=[rotcubex+Math.cos((step+135)*Math.PI/90)*100,rotcubey+rotcubes*3/5+Math.sin((step+135)*Math.PI/90)*30];
+  cubepoint1=[rotcubex+Math.cos(step*Math.PI/90)*100,       rotcubey-rotcubes*3/5+Math.sin(step*Math.PI/90)*30];
+  cubepoint2=[rotcubex+Math.cos((step+45)*Math.PI/90)*100,  rotcubey-rotcubes*3/5+Math.sin((step+45)*Math.PI/90)*30];
+  cubepoint3=[rotcubex+Math.cos((step+90)*Math.PI/90)*100,  rotcubey-rotcubes*3/5+Math.sin((step+90)*Math.PI/90)*30];
+  cubepoint4=[rotcubex+Math.cos((step+135)*Math.PI/90)*100, rotcubey-rotcubes*3/5+Math.sin((step+135)*Math.PI/90)*30];
+  cubepoint5=[cubepoint1[0],cubepoint1[1]+125];
+  cubepoint6=[cubepoint2[0],cubepoint2[1]+125];
+  cubepoint7=[cubepoint3[0],cubepoint3[1]+125];
+  cubepoint8=[cubepoint4[0],cubepoint4[1]+125];
   drawline(cubepoint1[0],cubepoint1[1],cubepoint2[0],cubepoint2[1]);
   drawline(cubepoint2[0],cubepoint2[1],cubepoint3[0],cubepoint3[1]);
   drawline(cubepoint3[0],cubepoint3[1],cubepoint4[0],cubepoint4[1]);
@@ -150,8 +150,22 @@ function sinescroll(y,text,step,speed,oscil,space){
   draw();  
 }
 
+function bouncescroll(y,text,step,oscil){
+  /*
+  Same as sinescroll, but bouncing
+
+  y: heigth
+  text: string to scroll
+  step: clock signal
+  speed: integer. Higher is faster. Recommended 2
+  oscil: vertical oscilation. Recommended font height
+  space: separation between letters. Recommended font size
+  */
+
+  ctx.fillText(text,620-step*2,y-Math.abs(oscil*Math.sin(step/12)));
+}
+
 // TO-DO: Fix continuity
-// Use the same technique as in the starfield or snow
 tunnelpool=[]
 function tunnel(x,y,type,step){
   /*
@@ -170,7 +184,7 @@ function tunnel(x,y,type,step){
   step=step%10
 
   // If there are less than 20 sections, add a new one
-  if (tunnelpool.length<=10){
+  if (tunnelpool.length<=21){
     tunnelpool.push({"shapev":type, "secstep":1})
   }
 
@@ -200,10 +214,6 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   step: Clock signal
   */
 
-  // Draw alpha 0 line (For tests)
-  ctx.strokeStyle="rgba(00,00,256,1)";
-  drawline (0,y1-25,600,y1-25);
-
   // Draw leading segment
   ctx.beginPath();
   ctx.strokeStyle="black";
@@ -217,7 +227,16 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   // Draw trace
   if (trace==1){
     ctx.beginPath();
-    if (step>speed*2) {transp=0} else {transp=1}
+
+    // Define trace transparency
+    if (step>speed*2) {
+      transp=0;
+    } 
+    else {
+      transp=8/step;
+    }
+
+    // Define strokeStyle, draw trace
     ctx.strokeStyle="rgba("+R+","+G+","+B+","+transp+")";
     drawline(
       x1,
@@ -443,6 +462,45 @@ function starfield(stars,speed,sstep,die){
 
 }
 
+laz0rcolours=["RED","GREEN","BLUE","YELLOW","PINK","#FABADA","#C0FFEE","#FFF000"]
+laz0rstep="WTF";
+function laz0r(step){
+  /*
+  Draws a random laser beam in the screen
+  */
+
+  // Pick start and end points
+  if (laz0rstep!=step){
+    laz0rx1=Math.random()*600
+    laz0ry1=Math.random()*600
+    laz0rx2=Math.random()*600
+    laz0ry2=Math.random()*600
+    laz0rstep=step
+  }
+  // Goto start point and draw a line
+  ctx.beginPath();
+  ctx.strokeStyle=laz0rcolours[Math.floor(Math.random()*4.4)];
+  ctx.moveTo(laz0rx1,laz0ry1);
+  ctx.lineTo(laz0rx2,laz0ry2);
+  ctx.stroke();
+  ctx.strokeStyle="white";
+}
+
+function laz0r2(x,y,colour,step){
+  /*
+  Draws whirling lasers
+
+  step: clock signal
+  */
+
+  ctx.strokeStyle=colour;
+  ctx.fill();
+  for (i=0; i<40; i++){
+    drawang(x,y,700,(4*step/Math.PI)+(i*Math.PI/20))
+  }
+  ctx.strokeStyle="white";
+}
+
 // TO-DO
 function octopus(step){
   /*
@@ -450,12 +508,22 @@ function octopus(step){
   step: clock signal
   */
 
-  drawsphere(300,300,40);
-  //for (i=0; i<8){
+  rotation=0.02*step;
+   
+  for (i=0; i<8; i++){
+    // Temporary straight lines
+    //drawang(300,300,200,(i*Math.PI/4)+rotation);
+    ctx.moveTo(0,600);
+    ctx.bezierCurveTo(100*i,100,600,100*i,600,100*i);
+    draw();
+
+    // NOTE: Bezier curves are too slow
     // calculate initial and final coordinates
     // draw sine waves
-    //drawline(xspos,yspos,xfpos,yfpos)
-  //}
+  }
+  // TO-DO: find a way of defining a direction (f(x)=ax+b)  
+  // drawsphere(300,300,40);
+  // ctx.fill();
 }
 
 // TO-DO
@@ -475,7 +543,6 @@ function meatballs(number, step){
   */
 }
 
-// TO-DO
 function torsion(step){
   /*
   Draws some twisting bars
@@ -511,7 +578,7 @@ function snow(step,stop){
   Coded during FOSDEM. Better souvenir than an actual snowball
   */
 
-  snowdropn=700
+  snowdropn=666
   
   // Move each drop individually
   function movedrop(snowdrop){
@@ -550,7 +617,6 @@ function seascape(step){
   // Paint sun/reflections
 }
 
-// TO-DO
 function gelogo(){
   /*
   Draws the GE logo with the \o/ dudes
@@ -589,7 +655,6 @@ function draw(){
 }
 
 // Sync stuff
-
 bpm=150;
 beat=0;
 beatpool=0;
@@ -613,12 +678,11 @@ function updatebeat(){
 }
 
 // Iterator specs
-
 fps=60;
+cycle=1;
 subcycle=1;
 backwards=0;
 scrh=500;
-cycle=1;
 count="u";
 
 // Sync vars
@@ -629,7 +693,7 @@ tunninit=0;
 tunn2init=0;
 
 // Testing
-test=0;
+test=1;
 
 function main(){
   /*
@@ -643,28 +707,42 @@ function main(){
 
   // Effect testing
 
-  // [WIP, gradient lag] Drive scene
+  // Drive scene
   // sunsetdrive(cycle);
 
-  // [Tranparency weirdness] Traceray test
-  // subcycles.c=cycle%100;
-  // raytrace(0,300,600,300,10,1,0,128,255,subcycles.c);
+  // Traceray test
+  // subcycle=cycle%70;
+  // raytrace(0,300,600,300,10,1,0,128,255,subcycle);
   
   // [WIP] Octopus
-  //octopus(cycle);
+  // octopus(cycle);
 
   // [WIP] Torsion
   // torsion(cycle);
 
   // [WIP] Tunnel
-  // tunnel(300,300,4,cycle);
+  // if (beat%4<=1){tunnel(300,300,1,cycle);}
+  // if (beat%4>1){tunnel(300,300,4,cycle);}
 
-  // [WIP] Cube
-  //threedcube(cycle);
+  // [WIP] wat
+  laz0r(Math.floor(cycle/5));
+  laz0r2(500,100,"green",cycle);
+  laz0r2(-10,400,"green",cycle);
+  threedcube(cycle);
+  if (beat%2==0){ctx.fillText("_(^o^\\)",265,300);}
+  else if (beat%2==1){ctx.fillText("\\(^o^_)",265,300);}
+
+  // Cube
+  // threedcube(cycle);
 
   // Text display tests
   // [Nope] Bezier scroll
-  //bezier(250,"bezier text",40,10,cycle%100);
+  // bezier(250,"bezier text",40,10,cycle%100);
+
+  // [WIP] Bouncescroll
+  // bouncescroll(300,"Test              ",cycle,100);
+  // bouncescroll(300,"     bounce       ",cycle-50,150);
+  // bouncescroll(300,"            scroll",cycle-100,50);
 
   if (test==0){
   // Actual demo 
@@ -746,11 +824,11 @@ function main(){
       if (beat>=105){
         threedcube(cycle);
         if (beat>=130){
-          //tunnel(300,300,4,cycle);
+          // tunnel(300,300,4,cycle);
           ctx.fillText("Tunnel disabled",10,50);
         }
         else if (beat>=113){
-          //tunnel(300,300,1,cycle);
+          // tunnel(300,300,1,cycle);
           ctx.fillText("Tunnel disabled",10,50);
         }
       }
@@ -774,7 +852,7 @@ function demo(ev){
     clearInterval();
     tempdate=new Date();
     lastdate=tempdate.getTime();
-    if (test==0){track.play();}
+    // if (test==0){track.play();}
     setInterval(main,1000/fps);
   }
 }
@@ -784,9 +862,11 @@ function menu(){
   done=0;
   ctx.fillStyle="white"
   ctx.fillText("LOADERING",250,310);
-  track=new Audio("achifaifa.wav");
-  track.src="./achifaifa.wav";
+  track=new Audio("alphasound.wav");
+  track.src="./alphasound.wav";
+  // TO-DO add callback to loader
   track.load();
+  // ALT: wait 5-10 seconds 
   ctx.clearRect(0,0,600,600);
   drawline(0,250,600,250);
   drawline(0,350,600,350);
