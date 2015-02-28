@@ -230,7 +230,7 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
 
     // Define trace transparency
     if (step>speed) {
-      transp=4/(step-speed);
+      transp=-0.1+(5/(step-speed));
     } 
     else {
       transp=1;
@@ -249,7 +249,6 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
       y1+traceyoffs
     );
     draw();
-    ctx.strokeStyle="black";
   }
   draw();
   ctx.strokeStyle="white";
@@ -555,6 +554,8 @@ function firework(x1,y1,x2,y2,RR,GG,BB,pooln,step){
   x2, y2: Explosion point
   R,G,B: Colour of trace and explosion particles
   step: guess what this does
+
+  To repeat it with different explosion patterns, use cycle%100
   */
 
   raytrace(x1,y1,x2,y2,15,1,RR,GG,BB,step);
@@ -563,6 +564,7 @@ function firework(x1,y1,x2,y2,RR,GG,BB,pooln,step){
     particlexplosion(x2,y2,RR,GG,BB,pooln,eval("partcycle"+pooln));
     eval("partcycle"+pooln+"++");
   }
+  if (step==99){eval("explpool"+pooln+"=[]")}
 }
 
 function particlexplosion(x,y,R,G,B,pooln,step){
@@ -579,17 +581,17 @@ function particlexplosion(x,y,R,G,B,pooln,step){
   // Each particle object has initial x and y speeds and 
   // a random start delay (from 0 to 10 cycles)
   if (eval("explpool"+pooln+".length==0")){
-    for (i=0; i<150; i++){
-      eval("explpool"+pooln+".push({'vs':(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6, \
-                           'hs':(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6, \
-                           'delay':Math.random()*20, \
-                           'die':20+Math.random()*50})");
+    for (i=0; i<100; i++){
+      eval("explpool"+pooln+".push({ \
+        'vs':(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6, \
+        'hs':(((-0.5+Math.random())/3)+((-0.5+Math.random())/3)+((-0.5+Math.random())/3))*6, \
+        'die':20+Math.random()*50})");
     }
   }
 
   // Draw particle function
   function drawexpart(object, step){
-    if (object.delay<step && object.die>step){
+    if (object.die>step){
       expartxpos=x+object.hs*step;
       expartypos=y+object.vs*step;
       ctx.fillRect(expartxpos,expartypos,2,2)
@@ -664,18 +666,6 @@ function snow(step,stop){
   }
   // Draw drops based on position(x), step and plane
   for (i=0; i<snowdropn; i++){movedrop(snowlist[i]);}
-}
-
-// TO-DO
-function seascape(step){
-  /*
-  Draws a seascape
-  step: clock signal
-  */
-
-  // Move waves
-  // Paint highlights
-  // Paint sun/reflections
 }
 
 function gelogo(){
@@ -793,12 +783,6 @@ function main(){
   // threedcube(cycle);
   // if (beat%2==0){ctx.fillText("_(^o^\\)",265,300);}
   // else if (beat%2==1){ctx.fillText("\\(^o^_)",265,300);}
-
-  firework(200,600,250,100,256,128,000,1,cycle);
-  firework(300,600,275,075,256,256,000,2,cycle-4);
-  firework(400,600,410,120,000,128,200,3,cycle-13);
-  firework(500,600,550,110,206,128,200,4,cycle-15);
-  firework(100,600,070,140,128,128,256,5,cycle-20);
 
   // Text display tests
   // [Nope] Bezier scroll
