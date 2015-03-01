@@ -117,20 +117,22 @@ function drawang(x,y,len,ang){
 }
 
 // TO-DO: WTF is this
-function bezier(y,text,step,speed){
+function bezierscroll(y,text,step,speed){
   /*
   Scrolls a text using a bezier curve
   y: height
   text: sting to display
   step: clock signal
-  speed: how fast the thing goess
+  speed: number of divisions (less=faster)
   */
 
   ctx.beginPath();
-  // Show curve path
-  ctx.moveTo(600, y);
-  ctx.bezierCurveTo(0, y-50, 600, y-50, 0, y);
-  draw();
+  // Calculate position
+  beziert=speed*step*0.01
+  bezierxpos=600*(1-beziert)*(Math.pow(1-beziert,2)+3*Math.pow(beziert,2))
+  bezierypos=y*(Math.pow(1-beziert,3)+Math.pow(beziert,3))+(y-100)*3*(Math.pow(1-beziert,2)*beziert+(1-beziert)*Math.pow(beziert,2))
+  // Draw stuff in position
+  ctx.fillText(text,bezierxpos,bezierypos);
 }
 
 function sinescroll(y,text,step,speed,oscil,space){
@@ -786,7 +788,15 @@ function main(){
 
   // Text display tests
   // [Nope] Bezier scroll
-  // bezier(250,"bezier text",40,10,cycle%100);
+  bezierscroll(250,"b",(cycle%500),1);
+  bezierscroll(250,"e",(cycle%500)-5,1);
+  bezierscroll(250,"z",(cycle%500)-10,1);
+  bezierscroll(250,"i",(cycle%500)-15,1);
+  bezierscroll(250,"e",(cycle%500)-20,1);
+  bezierscroll(250,"r",(cycle%500)-25,1);
+  bezierscroll(250,"!",(cycle%500)-30,1);
+  bezierscroll(250,"!",(cycle%500)-35,1);
+  bezierscroll(250,"!",(cycle%500)-40,1);
 
   // Actual demo 
   if (test==0){
@@ -841,7 +851,7 @@ function main(){
       ctx.fillText("DEMOS",250,450);
       ctx.fillText("BACK",325,500);
       ctx.font="20px sans-serif bold";
-      ctx.fillStyle="white"
+      ctx.fillStyle="white";
       c.style.background="#000";
     }
     if (beat<60) {snow(subcycle,0);}
