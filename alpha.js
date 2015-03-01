@@ -116,7 +116,6 @@ function drawang(x,y,len,ang){
   drawline(x,y,x+xd,y+yd);
 }
 
-// TO-DO: WTF is this
 function bezierscroll(y,text,step,speed){
   /*
   Scrolls a text using a bezier curve
@@ -130,7 +129,7 @@ function bezierscroll(y,text,step,speed){
   // Calculate position
   beziert=speed*step*0.01
   bezierxpos=600*(1-beziert)*(Math.pow(1-beziert,2)+3*Math.pow(beziert,2))
-  bezierypos=y*(Math.pow(1-beziert,3)+Math.pow(beziert,3))+(y-100)*3*(Math.pow(1-beziert,2)*beziert+(1-beziert)*Math.pow(beziert,2))
+  bezierypos=y*(Math.pow(1-beziert,3)+Math.pow(beziert,3))+(y-100)*3*(beziert-Math.pow(beziert,2))
   // Draw stuff in position
   ctx.fillText(text,bezierxpos,bezierypos);
 }
@@ -546,6 +545,21 @@ function meatballs(number, step){
   number: Number of balls
   step: clock signal
   */
+
+  //Temporary testing
+  //Draw spheres A and B
+  drawsphere(200,300,50);
+  ctx.fill();
+  drawsphere(400,300,100);
+  ctx.fill();
+  //Draw bezier curve
+  ctx.moveTo(225,256);
+  ctx.bezierCurveTo(275,300,275,300,329,229);
+  ctx.lineTo(329,371);
+  ctx.bezierCurveTo(275,300,275,300,225,344);
+  ctx.fill();
+  draw();
+
 }
 
 function firework(x1,y1,x2,y2,RR,GG,BB,pooln,step){
@@ -765,6 +779,9 @@ function main(){
 
   // Effect testing
 
+  // Meatballs
+  meatballs(0,cycle);
+
   // Drive scene
   // sunsetdrive(cycle);
   
@@ -787,16 +804,16 @@ function main(){
   // else if (beat%2==1){ctx.fillText("\\(^o^_)",265,300);}
 
   // Text display tests
-  // [Nope] Bezier scroll
-  bezierscroll(250,"b",(cycle%500),1);
-  bezierscroll(250,"e",(cycle%500)-5,1);
-  bezierscroll(250,"z",(cycle%500)-10,1);
-  bezierscroll(250,"i",(cycle%500)-15,1);
-  bezierscroll(250,"e",(cycle%500)-20,1);
-  bezierscroll(250,"r",(cycle%500)-25,1);
-  bezierscroll(250,"!",(cycle%500)-30,1);
-  bezierscroll(250,"!",(cycle%500)-35,1);
-  bezierscroll(250,"!",(cycle%500)-40,1);
+  // [YEAH] Bezier scroll
+  // bezierscroll(250,"b",(cycle%200),1);
+  // bezierscroll(250,"e",(cycle%200)-5,1);
+  // bezierscroll(250,"z",(cycle%200)-10,1);
+  // bezierscroll(250,"i",(cycle%200)-15,1);
+  // bezierscroll(250,"e",(cycle%200)-20,1);
+  // bezierscroll(250,"r",(cycle%200)-25,1);
+  // bezierscroll(250,"!",(cycle%200)-30,1);
+  // bezierscroll(250,"!",(cycle%200)-35,1);
+  // bezierscroll(250,"!",(cycle%200)-40,1);
 
   // Actual demo 
   if (test==0){
