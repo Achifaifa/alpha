@@ -538,7 +538,7 @@ function plasma(step){
   */
 }
 
-// TO-DO
+// WIP
 function meatballs(number, step){
   /*
   meatball effect
@@ -548,12 +548,14 @@ function meatballs(number, step){
 
   //Temporary testing
   //Draw spheres A and B
-  drawsphere(200,300,50);
+  meatsA=[200,300,50]
+  meatsB=[400,300,100]
+  drawsphere(meatsA[0],meatsA[1],meatsA[2]);
   ctx.fill();
-  drawsphere(400,300,100);
-  ctx.fill();
+  drawsphere(meatsB[0],meatsB[1],meatsB[2]);
   //Draw bezier curve
-  ctx.moveTo(225,256);
+  ctx.moveTo(meatsA[0]+(meatsA[2]/2),meatsA[1]-meatsA[2]*0.85);
+  meatmp=meatsB[0]-meatsA[0]-meatsB[2];
   ctx.bezierCurveTo(275,300,275,300,329,229);
   ctx.lineTo(329,371);
   ctx.bezierCurveTo(275,300,275,300,225,344);
