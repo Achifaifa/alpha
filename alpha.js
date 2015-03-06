@@ -542,11 +542,12 @@ function plasma(step){
   */
 }
 
-meatthresh=10;
-meatgoo=2
-meatsize=[Math.random()*30+Math.random()*30+Math.random()*30,
-          Math.random()*30+Math.random()*30+Math.random()*30,
-          Math.random()*30+Math.random()*30+Math.random()*30];
+meatt=1.2;
+meatgoo=0.9
+meatsize=[Math.floor(10+Math.random()*30+Math.random()*30+Math.random()*30),
+          Math.floor(10+Math.random()*30+Math.random()*30+Math.random()*30),
+          Math.floor(10+Math.random()*30+Math.random()*30+Math.random()*30)];
+
 function meatballs(step){
   /*
   meatball effect
@@ -554,22 +555,18 @@ function meatballs(step){
   step: clock signal
   */
 
+  ctx.fillStyle="whte"
   meatang=Math.PI*step/150;
   meatballA=[300+Math.cos(meatang*2.5)*280,300+Math.sin(meatang*1.3)*280];
   meatballB=[300+Math.sin(meatang*1.8)*280,300+Math.cos(meatang*2.0)*280];
   meatballC=[200+Math.sin(meatang*0.7)*150,400+Math.cos(meatang*1.6)*150];
 
-  markcoords(meatballA[0],meatballA[1]);
-  markcoords(meatballB[0],meatballB[1]);
-  markcoords(meatballC[0],meatballC[1]);
-
   for (i=0; i<50; i++){
     for (j=0; j<50; j++){
-      if ((meatsize[0]/Math.pow(Math.sqrt(meatballA[0]-j,2)+Math.sqrt(MeatballA[1]-i,2),meatgoo))+
-          (meatsize[1]/Math.pow(Math.sqrt(meatballB[0]-j,2)+Math.sqrt(MeatballB[1]-i,2),meatgoo))+
-          (meatsize[2]/Math.pow(Math.sqrt(meatballC[0]-j,2)+Math.sqrt(MeatballC[1]-i,2),meatgoo))
-          >meatthresh){
-        ctx.fillRect(j,i,12,12);
+      if ((meatsize[0]/Math.pow(Math.sqrt(Math.pow(meatballA[0]-j*12,2)+Math.pow(meatballA[1]-i*12,2)),meatgoo))+
+          (meatsize[1]/Math.pow(Math.sqrt(Math.pow(meatballB[0]-j*12,2)+Math.pow(meatballB[1]-i*12,2)),meatgoo))+
+          (meatsize[2]/Math.pow(Math.sqrt(Math.pow(meatballC[0]-j*12,2)+Math.pow(meatballC[1]-i*12,2)),meatgoo))>meatt){
+        ctx.fillRect(j*12,i*12,12,12);
       }
     }
   }
