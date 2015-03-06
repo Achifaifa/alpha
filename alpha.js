@@ -116,22 +116,31 @@ function drawang(x,y,len,ang){
   drawline(x,y,x+xd,y+yd);
 }
 
-function bezierscroll(y,text,step,speed){
+function bezierscroll(y,text,step){
   /*
   Scrolls a text using a bezier curve
+
   y: height
   text: sting to display
   step: clock signal
-  speed: number of divisions (less=faster)
   */
 
+  function updatebezpos(y,step){
+    /*
+    Gets bezier coordinates from y position and step
+    */
+    beziert=step*0.01
+    bezierxpos=600*(1-beziert)*(Math.pow(1-beziert,2)+3*Math.pow(beziert,2))
+    bezierypos=y*(Math.pow(1-beziert,3)+Math.pow(beziert,3))+(y-100)*3*(beziert-Math.pow(beziert,2))
+  }
+
+  // Just in case
   ctx.beginPath();
-  // Calculate position
-  beziert=speed*step*0.01
-  bezierxpos=600*(1-beziert)*(Math.pow(1-beziert,2)+3*Math.pow(beziert,2))
-  bezierypos=y*(Math.pow(1-beziert,3)+Math.pow(beziert,3))+(y-100)*3*(beziert-Math.pow(beziert,2))
-  // Draw stuff in position
-  ctx.fillText(text,bezierxpos,bezierypos);
+  // Get positions and draw stuff in them
+  for (i=0; i<text.length; i++){
+    updatebezpos(y,step-(i*5))
+    ctx.fillText(text[i],bezierxpos,bezierypos);
+  }
 }
 
 function sinescroll(y,text,step,speed,oscil,space){
@@ -216,7 +225,6 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
   // Draw leading segment
   if (step<speed){
     ctx.beginPath();
-    ctx.strokeStyle="white";
     drawline(
       x1+(step*((x2-x1)/speed)),
       y1+(step*((y2-y1)/speed)),
@@ -252,7 +260,6 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
     draw();
   }
   draw();
-  ctx.strokeStyle="white";
 }
 
 function markcoords(x,y){
@@ -296,7 +303,7 @@ function breaktitles(x,y,text,step){
   }
 }
 
-// TO-DO: fix 'gradients', improve continuity
+// TO-DO: fix 'gradients', improve continuity, make it not suck
 function sunsetdrive(step){
   /* 
   Draws a sunset drive scene (credits?)
@@ -398,6 +405,7 @@ function sunsetdrive(step){
   drawline(300,400,600,600);
 
   // Draw road rays
+  ctx.fillStyle="black"
   for (j=0;j<=4;j++){
     for (i=-10;i<=10;i++){
       raytrace(300,400,300+30*i,600,20,0,"AA","AA","AA",raycycle+(5*j));
@@ -534,20 +542,19 @@ function octopus(step){
   // ctx.fill();
 }
 
-// TO-DO
+//TO-DO
 function plasma(step){
   /*
   Plasma effect
+
   step: clock signal
   */
+
+  // I have no idea
 }
 
-meatt=1.2;
-meatgoo=0.9
-meatsize=[Math.floor(10+Math.random()*30+Math.random()*30+Math.random()*30),
-          Math.floor(10+Math.random()*30+Math.random()*30+Math.random()*30),
-          Math.floor(10+Math.random()*30+Math.random()*30+Math.random()*30)];
-
+meatt=1.4;
+meatgoo=0.95
 function meatballs(step){
   /*
   meatball effect
@@ -557,21 +564,19 @@ function meatballs(step){
 
   ctx.fillStyle="whte"
   meatang=Math.PI*step/150;
-  meatballA=[300+Math.cos(meatang*2.5)*280,300+Math.sin(meatang*1.3)*280];
-  meatballB=[300+Math.sin(meatang*1.8)*280,300+Math.cos(meatang*2.0)*280];
-  meatballC=[200+Math.sin(meatang*0.7)*150,400+Math.cos(meatang*1.6)*150];
+  meatballA=[300+Math.cos(meatang*2.5)*150,300+Math.sin(meatang*2)*150];
+  meatballB=[300+Math.sin(meatang*1.8)*150,300+Math.cos(meatang*2.0)*150];
+  meatballC=[300+Math.sin(meatang+50*2)*150,300+Math.cos(meatang+50*1)*150];
 
-  for (i=0; i<50; i++){
-    for (j=0; j<50; j++){
-      if ((meatsize[0]/Math.pow(Math.sqrt(Math.pow(meatballA[0]-j*12,2)+Math.pow(meatballA[1]-i*12,2)),meatgoo))+
-          (meatsize[1]/Math.pow(Math.sqrt(Math.pow(meatballB[0]-j*12,2)+Math.pow(meatballB[1]-i*12,2)),meatgoo))+
-          (meatsize[2]/Math.pow(Math.sqrt(Math.pow(meatballC[0]-j*12,2)+Math.pow(meatballC[1]-i*12,2)),meatgoo))>meatt){
-        ctx.fillRect(j*12,i*12,12,12);
+  for (i=0; i<60; i++){
+    for (j=0; j<60; j++){
+      if ((50/Math.pow(Math.sqrt(Math.pow(meatballA[0]-j*10,2)+Math.pow(meatballA[1]-i*10,2)),meatgoo))+
+          (40/Math.pow(Math.sqrt(Math.pow(meatballB[0]-j*10,2)+Math.pow(meatballB[1]-i*10,2)),meatgoo))+
+          (40/Math.pow(Math.sqrt(Math.pow(meatballC[0]-j*10,2)+Math.pow(meatballC[1]-i*10,2)),meatgoo))>meatt){
+        ctx.fillRect(j*10,i*10,10,10);
       }
     }
   }
-  
-
 }
 
 function firework(x1,y1,x2,y2,RR,GG,BB,pooln,step){
@@ -753,6 +758,7 @@ function updatebeat(){
     beatpool=0;
     beat=beat+1;
   }
+  // Beat printing for syncing and debugging
   ctx.fillText(beat+"/"+cycle+"/"+subcycle,20,20);
 }
 
@@ -792,7 +798,7 @@ function main(){
   // Effect testing
 
   // Meatballs
-  meatballs(cycle);
+  // meatballs(cycle);
 
   // Drive scene
   // sunsetdrive(cycle);
@@ -817,15 +823,7 @@ function main(){
 
   // Text display tests
   // [YEAH] Bezier scroll
-  // bezierscroll(250,"b",(cycle%200),1);
-  // bezierscroll(250,"e",(cycle%200)-5,1);
-  // bezierscroll(250,"z",(cycle%200)-10,1);
-  // bezierscroll(250,"i",(cycle%200)-15,1);
-  // bezierscroll(250,"e",(cycle%200)-20,1);
-  // bezierscroll(250,"r",(cycle%200)-25,1);
-  // bezierscroll(250,"!",(cycle%200)-30,1);
-  // bezierscroll(250,"!",(cycle%200)-35,1);
-  // bezierscroll(250,"!",(cycle%200)-40,1);
+  bezierscroll(250,"BEZIER TEST !!1!eleven!",(cycle%300),1);
 
   // Actual demo 
   if (test==0){
