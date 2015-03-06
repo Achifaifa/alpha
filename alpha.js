@@ -261,16 +261,20 @@ function markcoords(x,y){
   x,y: Position
   */
 
+  //sphere
   drawsphere(x,y,15);
+  //crosshairs
   drawline(x-15,y,x-20,y);
   drawline(x+20,y,x+15,y);
   drawline(x,y-15,x,y-20);
   drawline(x,y+20,x,y+15);
+  //indicators
   drawline(x-10,y-10,x-20,y-20);
-  drawline(x-20,y-20,x-70,y-20);
+  drawline(x-20,y-20,x-115,y-20);
+  //coord text
   ctx.font="8px sans-serif";
-  ctx.fillText("X"+x,x-70,y-22);
-  ctx.fillText("Y"+y,x-70,y-12);
+  ctx.fillText("X"+x,x-115,y-22);
+  ctx.fillText("Y"+y,x-115,y-12);
   ctx.font="20px sans-serif bold";
 }
 
@@ -538,29 +542,31 @@ function plasma(step){
   */
 }
 
-// WIP
-function meatballs(number, step){
+meatthresh=10;
+function meatballs(step){
   /*
   meatball effect
-  number: Number of balls
+
   step: clock signal
   */
 
-  //Temporary testing
-  //Draw spheres A and B
-  meatsA=[200,300,50]
-  meatsB=[400,300,100]
-  drawsphere(meatsA[0],meatsA[1],meatsA[2]);
-  ctx.fill();
-  drawsphere(meatsB[0],meatsB[1],meatsB[2]);
-  //Draw bezier curve
-  ctx.moveTo(meatsA[0]+(meatsA[2]/2),meatsA[1]-meatsA[2]*0.85);
-  meatmp=meatsB[0]-meatsA[0]-meatsB[2];
-  ctx.bezierCurveTo(275,300,275,300,329,229);
-  ctx.lineTo(329,371);
-  ctx.bezierCurveTo(275,300,275,300,225,344);
-  ctx.fill();
-  draw();
+  meatang=Math.PI*step/180;
+  meatballA=[300+Math.cos(meatang)*200,300+Math.sin(meatang)*200];
+  meatballB=[300+Math.sin(meatang)*200,300+Math.cos(meatang)*200];
+  //meatballC=[200+Math.random()*400,200+Math.random()*400];
+
+  markcoords(meatballA[0],meatballA[1]);
+  markcoords(meatballB[0],meatballB[1]);
+  //markcoords(meatballC[0],meatballC[1]);
+
+  // for (i=0; i<50){
+  //   for (j=0; j<50){
+  //     if (()+()+()>meatthresh){
+  //       ctx.fillRect(i,j,12,12);
+  //     }
+  //   }
+  // }
+  
 
 }
 
@@ -782,7 +788,7 @@ function main(){
   // Effect testing
 
   // Meatballs
-  meatballs(0,cycle);
+  meatballs(cycle);
 
   // Drive scene
   // sunsetdrive(cycle);
