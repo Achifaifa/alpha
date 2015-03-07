@@ -5,7 +5,7 @@ ctx.canvas.width=600;
 ctx.canvas.height=600;
 ctx.fillStyle="white"
 ctx.strokeStyle="white"
-ctx.font="20px sans-serif bold";
+ctx.font="25px sans-serif bold";
 
 function drawsphere(x,y,rad){
   /*
@@ -302,7 +302,7 @@ function breaktitles(x,y,text,step){
   for (i=0; i<text.length; i++){
     ctx.fillText(
       text[i],
-      x-(2*Math.random()-1)*Math.abs(100-step)+(15*i),
+      x-(2*Math.random()-1)*Math.abs(100-step)+(20*i),
       y-(2*Math.random()-1)*Math.abs(100-step)
     );
   }
@@ -454,7 +454,7 @@ function starfield(stars,speed,sstep,die){
 
     // Draw the star
     ctx.beginPath();
-    ctx.fillRect(starxpos,starypos,1,1); 
+    ctx.fillRect(starxpos,starypos,2,2); 
     ctx.fill();
 
     // Incerment star step, reset position and randomize direction if out of field
@@ -827,14 +827,6 @@ function main(){
   // if (beat%4<=1){tunnel(300,300,1,cycle);}
   // if (beat%4>1){tunnel(300,300,4,cycle);}
 
-  // [WIP] wat
-  // laz0r(Math.floor(cycle/5));
-  // laz0r2(500,100,"green",cycle);
-  // laz0r2(-10,400,"green",cycle);
-  // threedcube(cycle);
-  // if (beat%2==0){ctx.fillText("_(^o^\\)",265,300);}
-  // else if (beat%2==1){ctx.fillText("\\(^o^_)",265,300);}
-
   // Text display tests
   // [YEAH] Bezier scroll
   //bezierscroll(250,"BEZIER TEST !!1!eleven!",(cycle%300),1);
@@ -970,12 +962,20 @@ function main(){
   }
 
   else if (beat<270){
-    ctx.fillText("effect3",10,50);
+    laz0r(Math.floor(cycle/5));
+    laz0r2(500,100,"green",cycle);
+    laz0r2(-10,400,"green",cycle);
+    threedcube(cycle);
+    if (beat%2==0){ctx.fillText("_(^o^\\)",265,300);}
+    else if (beat%2==1){ctx.fillText("\\(^o^_)",265,300);}
   }
 
   // More effects
   else if (beat<286){
-    ctx.fillText("effect4",10,50);
+    laz0r(Math.floor(cycle/5));
+    laz0r2(500,100,"green",cycle);
+    laz0r2(-10,400,"green",cycle);
+    meatballs(cycle);
   }
 
   }
