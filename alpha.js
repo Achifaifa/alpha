@@ -778,7 +778,7 @@ tunninit=0;
 tunn2init=0;
 
 // Testing
-test=1;
+test=0;
 
 // Effect vars
 for (i=1; i<10; i++){
@@ -823,7 +823,7 @@ function main(){
 
   // Text display tests
   // [YEAH] Bezier scroll
-  bezierscroll(250,"BEZIER TEST !!1!eleven!",(cycle%300),1);
+  //bezierscroll(250,"BEZIER TEST !!1!eleven!",(cycle%300),1);
 
   // Actual demo 
   if (test==0){
@@ -905,18 +905,50 @@ function main(){
       if (beat>=105){
         threedcube(cycle);
         if (beat>=130){
-          ctx.fillText("FILLER 1",10,50);
+          ctx.fillText("noclear",10,50);
         }
         else if (beat>=113){
           // tunnel(300,300,1,cycle);
-          ctx.fillText("Tunnel disabled",10,50);
+          ctx.fillText("Cubes jumping",10,50);
         }
       }
     }
   }
 
-  // Wut
-  else {torsion(cycle)}
+  // Effect 2 (Torsion)
+  else if (beat<178){
+    torsion(cycle);
+    if (beat>162){
+      torsion(cycle+1824);
+    }
+  }
+
+  else if (beat<212){
+    ctx.fillText("effect 1",10,50);
+    if (beat>196){
+      ctx.fillText("effect2",10,50);
+    }
+  }
+
+  // Slow part
+  else if (beat<245){
+    ctx.fillText("slow part",10,50);
+  }
+
+  // Buildup
+  else if (beat<253){
+    ctx.fillText("buildup",10,50);
+  }
+
+  else if (beat<270){
+    ctx.fillText("effect3",10,50);
+  }
+
+  // More effects
+  else if (beat<286){
+    ctx.fillText("effect4",10,50);
+  }
+
   }
   updatebeat();
   cycle++;
