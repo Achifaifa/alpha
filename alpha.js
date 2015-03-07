@@ -118,6 +118,7 @@ function drawang(x,y,len,ang){
   drawline(x,y,x+xd,y+yd);
 }
 
+// used
 function bezierscroll(y,text,step){
   /*
   Scrolls a text using a bezier curve
@@ -558,6 +559,7 @@ function plasma(step){
   // I have no idea
 }
 
+// used
 meatt=1.4;
 meatgoo=0.95
 function meatballs(step){
@@ -776,6 +778,7 @@ cycle=1;
 subcycle=1;
 backwards=0;
 scrh=500;
+noclear=0;
 count="u";
 
 // Sync vars
@@ -785,9 +788,11 @@ cubeinit=0;
 tunninit=0;
 tunn2init=0;
 meattext=0;
+greettext=0;
+torsioninit=0;
 
 // Testing
-test=1;
+test=0;
 
 // Effect vars
 for (i=1; i<10; i++){
@@ -800,7 +805,7 @@ function main(){
   */
 
   // Clear screen
-  ctx.clearRect(0,0,600,600);
+  if(noclear==0){ctx.clearRect(0,0,600,600);}
   ctx.fillStyle="white"
   ctx.strokeStyle="white"
 
@@ -833,7 +838,7 @@ function main(){
   // Text display tests
   // [YEAH] Bezier scroll
   //bezierscroll(250,"BEZIER TEST !!1!eleven!",(cycle%300),1);
-  bouncescroll(550, "BOUNCE TEST",cycle,15);
+  // bouncescroll(550, "BOUNCE TEST",cycle,15);
 
   // Actual demo 
   if (test==0){
@@ -915,10 +920,9 @@ function main(){
       if (beat>=105){
         threedcube(cycle);
         if (beat>=130){
-          ctx.fillText("noclear",10,50);
+          noclear=1;
         }
         else if (beat>=113){
-          // tunnel(300,300,1,cycle);
           ctx.fillText("Cubes jumping",10,50);
         }
       }
@@ -927,9 +931,12 @@ function main(){
 
   // Effect 2 (Torsion)
   else if (beat<178){
+    if (torsioninit==0){subcycle=1;torsioninit=1};
+    noclear=0;
     torsion(cycle);
+    sinescroll(400,"                     Ghetto torsion!",subcycle,3,10,20);
     if (beat>162){
-      torsion(cycle+1824);
+      torsion(subcycle);
     }
   }
 
@@ -937,13 +944,24 @@ function main(){
     meatballs(cycle);
     if (beat>196){
       if (meattext==0){subcycle=1;meattext=1};
-      bouncescroll(550,"MEATBALL TEXT",subcycle,10)
+      bouncescroll(550,"meatball bouncy text",subcycle*2,20)
     }
   }
 
-  // Slow part
+  // Slow part (credits/greetings)
   else if (beat<245){
-    ctx.fillText("slow part",10,50);
+    if (greettext==0){subcycle=1;greettext=1};
+    bezierscroll(400,"Greetings to:",subcycle);
+    bezierscroll(500,"PKT Team",subcycle-100);
+    bezierscroll(200,"Dude B",subcycle-150);
+    bezierscroll(300,"ASD",subcycle-200);
+    bezierscroll(400,"Fairlight",subcycle-250);
+    bezierscroll(550,"Dude E",subcycle-300);
+    bezierscroll(300,"Farbrausch",subcycle-350);
+    bezierscroll(200,"Dude G",subcycle-400);
+    bezierscroll(500,"Dude H",subcycle-450);
+    bezierscroll(300,"EKparty scene crew",subcycle-500);
+
   }
 
   // Buildup
