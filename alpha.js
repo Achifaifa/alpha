@@ -21,6 +21,7 @@ function drawsphere(x,y,rad){
   draw();
 }
 
+// used
 function drawcube(x,y,side,rot){
   /* 
   Draws a cube
@@ -47,6 +48,7 @@ function drawcube(x,y,side,rot){
   draw();
 }
 
+// used
 function threedcube(step){
   /*
   Draws an actual rotating 3D cube
@@ -143,6 +145,7 @@ function bezierscroll(y,text,step){
   }
 }
 
+// used
 function sinescroll(y,text,step,speed,oscil,space){
   /*
   Scrolls a text using sins and damnation
@@ -166,12 +169,12 @@ function bouncescroll(y,text,step,oscil){
   y: heigth
   text: string to scroll
   step: clock signal
-  speed: integer. Higher is faster. Recommended 2
   oscil: vertical oscilation. Recommended font height
-  space: separation between letters. Recommended font size
   */
 
-  ctx.fillText(text,620-step*2,y-Math.abs(oscil*Math.sin(step/12)));
+  for (i=0; i<text.length; i++){
+    ctx.fillText(text[i],620-(step-(i*10))*2,y-Math.abs(oscil*Math.sin((step-(i*10))/12)));
+  }
 }
 
 // TO-DO: Fix continuity
@@ -285,6 +288,7 @@ function markcoords(x,y){
   ctx.font="20px sans-serif bold";
 }
 
+// used
 function breaktitles(x,y,text,step){
   /*
   Generates a title screen that breaks over time
@@ -413,6 +417,7 @@ function sunsetdrive(step){
   }
 }
 
+// used
 function starfield(stars,speed,sstep,die){
   /*
   Draws a classy starfield. 
@@ -641,6 +646,7 @@ function particlexplosion(x,y,R,G,B,pooln,step){
   ctx.fillStyle="white"
 }
 
+// used
 function torsion(step){
   /*
   Draws some twisting bars
@@ -667,6 +673,7 @@ function torsion(step){
   drawline(xbpos+75,ybpos,xbpos+75,ybpos+600);
 }
 
+// used
 function snow(step,stop){
   /*
   Draws some falling snow
@@ -701,6 +708,7 @@ function snow(step,stop){
   for (i=0; i<snowdropn; i++){movedrop(snowlist[i]);}
 }
 
+// used
 function gelogo(){
   /*
   Draws the GE logo with the \o/ dudes
@@ -776,9 +784,10 @@ eventinit=0;
 cubeinit=0;
 tunninit=0;
 tunn2init=0;
+meattext=0;
 
 // Testing
-test=0;
+test=1;
 
 // Effect vars
 for (i=1; i<10; i++){
@@ -824,6 +833,7 @@ function main(){
   // Text display tests
   // [YEAH] Bezier scroll
   //bezierscroll(250,"BEZIER TEST !!1!eleven!",(cycle%300),1);
+  bouncescroll(550, "BOUNCE TEST",cycle,15);
 
   // Actual demo 
   if (test==0){
@@ -924,9 +934,10 @@ function main(){
   }
 
   else if (beat<212){
-    ctx.fillText("effect 1",10,50);
+    meatballs(cycle);
     if (beat>196){
-      ctx.fillText("effect2",10,50);
+      if (meattext==0){subcycle=1;meattext=1};
+      bouncescroll(550,"MEATBALL TEXT",subcycle,10)
     }
   }
 
