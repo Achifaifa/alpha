@@ -714,24 +714,35 @@ function torsion(step){
   step: Clock signal
   */
 
-  xtpos=300+(Math.sin(Math.PI*step/2.2*2/35)*100)+(Math.sin(Math.PI*step/2.3*2/45+(Math.PI/4))*225)/2;
-  ytpos=250+(Math.cos(Math.PI*step/2.2*2/35)*100)+(Math.sin(Math.PI*step/2.3*2/45+(Math.PI/4))*225)/2;
-  xbpos=300+(Math.sin(Math.PI*step/3.3*2/35)*100)+(Math.sin(Math.PI*step/1.6*2/45+(Math.PI/4))*225)/2;
-  ybpos=450+(Math.cos(Math.PI*step/3.3*2/35)*100)+(Math.sin(Math.PI*step/1.6*2/45+(Math.PI/4))*225)/2;
+  tpost1=[250+Math.cos(step*Math.PI/90)*100,       250-100*3/5+Math.sin(step*Math.PI/90)*30];
+  tpost2=[250+Math.cos((step+45)*Math.PI/90)*100,  250-100*3/5+Math.sin((step+45)*Math.PI/90)*30];
+  tpost3=[250+Math.cos((step+90)*Math.PI/90)*100,  250-100*3/5+Math.sin((step+90)*Math.PI/90)*30];
+  tpost4=[250+Math.cos((step+135)*Math.PI/90)*100, 250-100*3/5+Math.sin((step+135)*Math.PI/90)*30];
+  tposb1=[250+Math.cos((step+22)*Math.PI/90)*100,  350-100*3/5+Math.sin((step+22)*Math.PI/90)*30];
+  tposb2=[250+Math.cos((step+67)*Math.PI/90)*100,  350-100*3/5+Math.sin((step+67)*Math.PI/90)*30];
+  tposb3=[250+Math.cos((step+112)*Math.PI/90)*100, 350-100*3/5+Math.sin((step+112)*Math.PI/90)*30];
+  tposb4=[250+Math.cos((step+157)*Math.PI/90)*100, 350-100*3/5+Math.sin((step+157)*Math.PI/90)*30];
 
-  // Top segment
-  drawline(xtpos,0,xtpos,ytpos);
-  drawline(xtpos+50,0,xtpos+50,ytpos);
+  for (i=1; i<=4; i++){
+    // Top segments
+    eval("drawline(tpost"+i+"[0], 0,   tpost"+i+"[0], tpost"+i+"[1])");
+    eval("drawline(tposb"+i+"[0], 600, tposb"+i+"[0], tposb"+i+"[1])");
+    eval("ctx.moveTo(tpost"+i+"[0],tpost"+i+"[1])");
+    eval("ctx.bezierCurveTo(tpost"+i+"[0],tpost"+i+"[1]+50,tposb"+i+"[0],tposb"+i+"[1]-50,tposb"+i+"[0],tposb"+i+"[1])")
+    draw();
+  }
+
   // Joint
-  ctx.moveTo(xtpos,ytpos)
-  ctx.bezierCurveTo(xtpos,ytpos+50,xbpos+25,ybpos-25,xbpos+25,ybpos);
-  draw();
-  ctx.moveTo(xtpos+50,ytpos)
-  ctx.bezierCurveTo(xtpos+50,ytpos+50,xbpos+75,ybpos-25,xbpos+75,ybpos);
-  draw();
-  // Botton segment
-  drawline(xbpos+25,ybpos,xbpos+25,ybpos+600);
-  drawline(xbpos+75,ybpos,xbpos+75,ybpos+600);
+
+  // ctx.moveTo(xtpos,ytpos);
+  // ctx.bezierCurveTo(xtpos,ytpos+50,xbpos+25,ybpos-25,xbpos+25,ybpos);
+  // draw();
+  // ctx.moveTo(xtpos+50,ytpos)
+  // ctx.bezierCurveTo(xtpos+50,ytpos+50,xbpos+75,ybpos-25,xbpos+75,ybpos);
+  // draw();
+  // // Botton segment
+  // drawline(xbpos+25,ybpos,xbpos+25,ybpos+600);
+  // drawline(xbpos+75,ybpos,xbpos+75,ybpos+600);
 }
 
 // used
@@ -851,6 +862,7 @@ meattext=0;
 greettext=0;
 explinit=0;
 firewinit=0;
+torsioninit=0;
 
 // Testing
 test=0;
@@ -884,28 +896,11 @@ function main(){
   // Drive scene
   // sunsetdrive(cycle);
 
-  // if (prevbeat!=beat){
-  //   cubefill=laz0rcolours[Math.floor(Math.random()*6.9)];
-  //   cubeside=Math.floor(1+Math.random()*6.9);
-  //   console.log("SIDE ",cubeside,"  colour ",cubefill)
-  // }
-  // ctx.fillStyle=cubefill;
-  // threedcube(cubeside,cycle);
-  // prevbeat=beat;
-
-  // firework(000,600,100,100,256,000,000,1,cycle%150);
-  // firework(600,600,550,125,256,128,000,2,(cycle-40)%200);
-  // firework(250,600,225,200,000,000,256,3,(cycle-100)%175);
-  // firework(375,600,355,120,256,000,256,4,(cycle-75)%175);
-  // gelogo();
-
-  // particlexplosion(200,400,256,000,000,1,cycle%96);
-
   // [WIP] Octopus
   // octopus(cycle);
 
   // [WIP] Torsion
-  // torsion(cycle);
+  //torsion(cycle);
 
   // [WIP] Tunnel
   // if (beat%4<=1){tunnel(300,300,1,cycle);}
@@ -1039,6 +1034,9 @@ function main(){
     particlexplosion(randexcoords3[0],randexcoords3[1],000,256,256,2,(cycle-48)%96);
     particlexplosion(randexcoords4[0],randexcoords4[1],256,000,256,2,(cycle-72)%96);
     if (beat>162){
+      if (torsioninit==0){subcycle=1;torsioninit=1};
+      torsion(subcycle);
+      bouncescroll(500,"Ghetto torsion bar",subcycle*2,15)
     }
   }
 
@@ -1047,7 +1045,7 @@ function main(){
     meatballs(cycle);
     if (beat>196){
       if (meattext==0){subcycle=1;meattext=1};
-      bouncescroll(550,"Code+music<64kB!",subcycle*2,20)
+      bouncescroll(550,"Code + music(.nsf) < 64kB !!!               ;P",subcycle*2,20)
     }
   }
 
@@ -1102,7 +1100,7 @@ function main(){
     gelogo();
     if (beat>310){
       ctx.fillText("Yes, it's over",100,500);
-      if (beat>350){
+      if (beat>330){
         ctx.fillText("Really!",275,500);
       }
     }
