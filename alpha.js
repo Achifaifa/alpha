@@ -49,22 +49,23 @@ function drawcube(x,y,side,rot){
 }
 
 // used
-function threedcube(step){
+function threedcube(colour,step){
   /*
   Draws an actual rotating 3D cube
 
   step: clock signal
+  colours: colours a side of the cube (0: off, 1-6: sides)
 
   Position fixed to 300,300 and size fixed to 100
    Define a cube with an array of points
       
        1------2
        |\     |\
-       | 3----|-4
+       | 4----|-3
        | |    | |
        5-|----6 |
         \|     \|
-         7------8
+         8------7
   */
 
   rotcubex=300
@@ -91,6 +92,61 @@ function threedcube(step){
   drawline(cubepoint2[0],cubepoint2[1],cubepoint6[0],cubepoint6[1]);
   drawline(cubepoint3[0],cubepoint3[1],cubepoint7[0],cubepoint7[1]);
   drawline(cubepoint4[0],cubepoint4[1],cubepoint8[0],cubepoint8[1]);
+
+  if (colour==1){
+    ctx.beginPath();
+    ctx.moveTo(cubepoint1[0],cubepoint1[1]);
+    ctx.lineTo(cubepoint2[0],cubepoint2[1]);
+    ctx.lineTo(cubepoint3[0],cubepoint3[1]);
+    ctx.lineTo(cubepoint4[0],cubepoint4[1]);
+    ctx.lineTo(cubepoint1[0],cubepoint1[1]);
+    ctx.fill();
+  }
+  if (colour==2){
+    ctx.beginPath();
+    ctx.moveTo(cubepoint5[0],cubepoint5[1]);
+    ctx.lineTo(cubepoint6[0],cubepoint6[1]);
+    ctx.lineTo(cubepoint7[0],cubepoint7[1]);
+    ctx.lineTo(cubepoint8[0],cubepoint8[1]);
+    ctx.lineTo(cubepoint5[0],cubepoint5[1]);
+    ctx.fill();
+  }
+  if (colour==3){
+    ctx.beginPath();
+    ctx.moveTo(cubepoint2[0],cubepoint2[1]);
+    ctx.lineTo(cubepoint3[0],cubepoint3[1]);
+    ctx.lineTo(cubepoint7[0],cubepoint7[1]);
+    ctx.lineTo(cubepoint6[0],cubepoint6[1]);
+    ctx.lineTo(cubepoint2[0],cubepoint2[1]);
+    ctx.fill();
+  }
+  if (colour==4){
+    ctx.beginPath();
+    ctx.moveTo(cubepoint1[0],cubepoint1[1]);
+    ctx.lineTo(cubepoint4[0],cubepoint4[1]);
+    ctx.lineTo(cubepoint8[0],cubepoint8[1]);
+    ctx.lineTo(cubepoint5[0],cubepoint5[1]);
+    ctx.lineTo(cubepoint1[0],cubepoint1[1]);
+    ctx.fill();
+  }
+  if (colour==5){
+    ctx.beginPath();
+    ctx.moveTo(cubepoint1[0],cubepoint1[1]);
+    ctx.lineTo(cubepoint2[0],cubepoint2[1]);
+    ctx.lineTo(cubepoint6[0],cubepoint6[1]);
+    ctx.lineTo(cubepoint5[0],cubepoint5[1]);
+    ctx.lineTo(cubepoint1[0],cubepoint1[1]);
+    ctx.fill();
+  }
+  if (colour==6){
+    ctx.beginPath();
+    ctx.moveTo(cubepoint2[0],cubepoint2[1]);
+    ctx.lineTo(cubepoint3[0],cubepoint3[1]);
+    ctx.lineTo(cubepoint7[0],cubepoint7[1]);
+    ctx.lineTo(cubepoint6[0],cubepoint6[1]);
+    ctx.lineTo(cubepoint2[0],cubepoint2[1]);
+    ctx.fill();
+  }
 }
 
 function drawline(x1,y1,x2,y2){
@@ -780,6 +836,7 @@ backwards=0;
 scrh=500;
 noclear=0;
 count="u";
+prevbeat=1;
 
 // Sync vars
 introinit=0;
@@ -816,7 +873,16 @@ function main(){
 
   // Drive scene
   // sunsetdrive(cycle);
-  
+
+  // if (prevbeat!=beat){
+  //   cubefill=laz0rcolours[Math.floor(Math.random()*6.9)];
+  //   cubeside=Math.floor(1+Math.random()*6.9);
+  //   console.log("SIDE ",cubeside,"  colour ",cubefill)
+  // }
+  // ctx.fillStyle=cubefill;
+  // threedcube(cubeside,cycle);
+  // prevbeat=beat;
+
   // [WIP] Octopus
   // octopus(cycle);
 
@@ -909,14 +975,22 @@ function main(){
       posxx=300+(Math.sin(Math.PI*(cycle+100)/2.3*2/45+(Math.PI/4))*425)/2;
       posyy=300+(Math.cos(Math.PI*(cycle+100)/3.4*2/45+(Math.PI/4))*425)/2;
       drawcube(posxx,posyy,100,Math.PI*(cycle+100)*2/45);
-      if (beat>=105){
-        threedcube(cycle);
-        if (beat>=130){
-          noclear=1;
+      if (beat>=105 && beat<113){
+        threedcube(0,cycle);
+      }
+      else if (beat>=113 && beat<130){
+        if (prevbeat!=beat){
+          cubefill=laz0rcolours[Math.floor(Math.random()*6.9)];
+          cubeside=Math.floor(1+Math.random()*6.9);
         }
-        else if (beat>=113){
-          ctx.fillText("Cubes jumping",10,50);
-        }
+        ctx.fillStyle=cubefill;
+        threedcube(cubeside,cycle);
+        prevbeat=beat;
+        ctx.fillStyle="white";
+      }
+      else if (beat>=130){
+        threedcube(0,cycle);
+        noclear=1;
       }
     }
   }
