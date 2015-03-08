@@ -273,24 +273,25 @@ function tunnel(x,y,type,step){
   }
 }
 
-function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
+// used
+function raytrace(x1,y1,x2,y2,trace,R,G,B,step){
   /*
   Draws a fast-moving particle that leaves a trail
   x1,y1: Initial position
   x2,y2: Final position
-  speed: Steps to completion
+  trace: draw trace (0/1)
   R,G,B: Colour of the trace
   step: Clock signal
   */
 
   // Draw leading segment
-  if (step<speed){
+  if (step<20){
     ctx.beginPath();
     drawline(
-      x1+(step*((x2-x1)/speed)),
-      y1+(step*((y2-y1)/speed)),
-      x1+((step+1)*(x2-x1)/speed),
-      y1+((step+1)*(y2-y1)/speed)
+      x1+(step*((x2-x1)/20)),
+      y1+(step*((y2-y1)/20)),
+      x1+((step+1)*(x2-x1)/20),
+      y1+((step+1)*(y2-y1)/20)
     );
   }
 
@@ -299,8 +300,8 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
     ctx.beginPath();
 
     // Define trace transparency
-    if (step>speed) {
-      transp=-0.1+(5/(step-speed));
+    if (step>20) {
+      transp=-0.1+(5/(step-20));
     } 
     else {
       transp=1;
@@ -308,10 +309,10 @@ function raytrace(x1,y1,x2,y2,speed,trace,R,G,B,step){
 
     // Define strokeStyle, draw trace
     ctx.strokeStyle="rgba("+R+","+G+","+B+","+transp+")";
-    tracexoffs=(step)*((x2-x1)/speed);
-    if (step>=speed){tracexoffs=x2-x1}
-    traceyoffs=(step)*((y2-y1)/speed);
-    if (step>=speed){traceyoffs=y2-y1}
+    tracexoffs=(step)*((x2-x1)/20);
+    if (step>=20){tracexoffs=x2-x1}
+    traceyoffs=(step)*((y2-y1)/20);
+    if (step>=20){traceyoffs=y2-y1}
     drawline(
       x1,
       y1,
@@ -656,7 +657,7 @@ function firework(x1,y1,x2,y2,RR,GG,BB,pooln,step){
   To repeat it with different explosion patterns, use cycle%100
   */
 
-  raytrace(x1,y1,x2,y2,15,1,RR,GG,BB,step);
+  raytrace(x1,y1,x2,y2,1,RR,GG,BB,step);
   if (step==20){eval("partcycle"+pooln+"=0")}
   if (step>=20){
     particlexplosion(x2,y2,RR,GG,BB,pooln,eval("partcycle"+pooln));
@@ -714,10 +715,10 @@ function torsion(step){
   step: Clock signal
   */
 
-  tpost1=[250+Math.cos((step+(20*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100,       250-100*3/5+Math.sin(step*Math.PI/90)*30];
-  tpost2=[250+Math.cos((step+45+(20*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100,  250-100*3/5+Math.sin((step+45)*Math.PI/90)*30];
-  tpost3=[250+Math.cos((step+90+(20*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100,  250-100*3/5+Math.sin((step+90)*Math.PI/90)*30];
-  tpost4=[250+Math.cos((step+135+(20*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100, 250-100*3/5+Math.sin((step+135)*Math.PI/90)*30];
+  tpost1=[250+Math.cos((step+(15*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100,       250-100*3/5+Math.sin(step*Math.PI/90)*30];
+  tpost2=[250+Math.cos((step+45+(15*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100,  250-100*3/5+Math.sin((step+45)*Math.PI/90)*30];
+  tpost3=[250+Math.cos((step+90+(15*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100,  250-100*3/5+Math.sin((step+90)*Math.PI/90)*30];
+  tpost4=[250+Math.cos((step+135+(15*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100, 250-100*3/5+Math.sin((step+135)*Math.PI/90)*30];
   tposb1=[250+Math.cos((step+22+(20*Math.cos(Math.PI*cycle/50)))*Math.PI/90)*100,  350-100*3/5+Math.sin((step+22)*Math.PI/90)*30];
   tposb2=[250+Math.cos((step+67+(20*Math.cos(Math.PI*cycle/50)))*Math.PI/90)*100,  350-100*3/5+Math.sin((step+67)*Math.PI/90)*30];
   tposb3=[250+Math.cos((step+112+(20*Math.cos(Math.PI*cycle/50)))*Math.PI/90)*100, 350-100*3/5+Math.sin((step+112)*Math.PI/90)*30];
@@ -865,7 +866,7 @@ firewinit=0;
 torsioninit=0;
 
 // Testing
-test=1;
+test=0;
 
 // Effect vars
 for (i=0; i<26; i++){
@@ -900,7 +901,20 @@ function main(){
   // octopus(cycle);
 
   // [WIP] Torsion
-  torsion(cycle);
+  // torsion(cycle);
+
+  // raytrace(0,300,600,300,20,1,256,000,000,(subcycle)%70);
+  // raytrace(0,310,600,310,20,1,000,256,000,(subcycle-10)%70);
+  // raytrace(0,320,600,320,20,1,000,000,256,(subcycle-50)%70);
+  // raytrace(0,330,600,330,20,1,256,256,000,(subcycle-25)%70);
+  // raytrace(0,340,600,340,20,1,000,256,256,(subcycle-60)%70);
+  // raytrace(0,350,600,350,20,1,256,000,256,(subcycle-13)%70);
+  // raytrace(0,360,600,360,20,1,256,256,256,(subcycle-27)%70);
+  // raytrace(0,370,600,370,20,1,256,128,000,(subcycle-55)%70);
+  // raytrace(0,380,600,380,20,1,000,256,128,(subcycle-33)%70);
+  // raytrace(0,390,600,390,20,1,128,256,000,(subcycle-8)%70);
+  // raytrace(0,400,600,400,20,1,000,128,256,(subcycle-45)%70);
+
 
   // [WIP] Tunnel
   // if (beat%4<=1){tunnel(300,300,1,cycle);}
@@ -908,7 +922,7 @@ function main(){
 
   // Text display tests
   // [YEAH] Bezier scroll
-  //bezierscroll(250,"BEZIER TEST !!1!eleven!",(cycle%300),1);
+  // bezierscroll(250,"BEZIER TEST !!1!eleven!",(cycle%300),1);
   // bouncescroll(550, "BOUNCE TEST",cycle,15);
 
   // Actual demo 
@@ -1033,10 +1047,11 @@ function main(){
     particlexplosion(randexcoords2[0],randexcoords2[1],256,256,000,2,(cycle-24)%96);
     particlexplosion(randexcoords3[0],randexcoords3[1],000,256,256,2,(cycle-48)%96);
     particlexplosion(randexcoords4[0],randexcoords4[1],256,000,256,2,(cycle-72)%96);
+    torsion(subcycle);
     if (beat>162){
-      if (torsioninit==0){subcycle=1;torsioninit=1};
-      torsion(subcycle);
-      bouncescroll(500,"Ghetto torsion bar",subcycle*2,15)
+      if (torsioninit==0){subsubcycle=1;torsioninit=1};
+      bouncescroll(500,"Ghetto torsion bar",subsubcycle*2,15)
+      subsubcycle++;
     }
   }
 
@@ -1069,15 +1084,24 @@ function main(){
 
   // Buildup
   else if (beat<253){
-    ctx.fillText("buildup",10,50);
+    raytrace(0,300,600,300,1,256,000,000,(subcycle)%70);
+    raytrace(0,310,600,310,1,000,256,000,(subcycle-10)%70);
+    raytrace(0,320,600,320,1,000,000,256,(subcycle-50)%70);
+    raytrace(0,330,600,330,1,256,256,000,(subcycle-25)%70);
+    raytrace(0,340,600,340,1,000,256,256,(subcycle-60)%70);
+    raytrace(0,350,600,350,1,256,000,256,(subcycle-13)%70);
+    raytrace(0,360,600,360,1,256,256,256,(subcycle-27)%70);
+    raytrace(0,370,600,370,1,256,128,000,(subcycle-55)%70);
+    raytrace(0,380,600,380,1,000,256,128,(subcycle-33)%70);
+    raytrace(0,390,600,390,1,128,256,000,(subcycle-8)%70);
+    raytrace(0,400,600,400,1,000,128,256,(subcycle-45)%70);
   }
 
   // Lasers
-  else if (beat<270){
+  else if (beat<269){
     laz0r(Math.floor(cycle/5));
     laz0r2(500,100,"green",cycle);
     laz0r2(-10,400,"green",cycle);
-    threedcube(cycle);
     if (beat%2==0){ctx.fillText("_(^o^\\)",265,300);}
     else if (beat%2==1){ctx.fillText("\\(^o^_)",265,300);}
   }
@@ -1101,7 +1125,7 @@ function main(){
     if (beat>310){
       ctx.fillText("Yes, it's over",100,500);
       if (beat>330){
-        ctx.fillText("Really!",275,500);
+        ctx.fillText("Really!",350,500);
         if (beat>350){
           ctx.fillText("Go home already",200,550);
         }
