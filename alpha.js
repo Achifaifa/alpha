@@ -853,7 +853,8 @@ test=0;
 
 // Effect vars
 for (i=1; i<10; i++){
-  eval("explpool"+i+"=[]")
+  eval("explpool"+i+"=[]");
+  eval("partcycle"+i+"=0");
 }
 
 function main(){
@@ -883,6 +884,12 @@ function main(){
   // threedcube(cubeside,cycle);
   // prevbeat=beat;
 
+  // firework(000,600,100,100,256,000,000,1,cycle%150);
+  // firework(600,600,550,125,256,128,000,2,(cycle-40)%200);
+  // firework(250,600,225,200,000,000,256,3,(cycle-100)%175);
+  // firework(375,600,355,120,256,000,256,4,(cycle-75)%175);
+  // gelogo();
+
   // [WIP] Octopus
   // octopus(cycle);
 
@@ -904,14 +911,12 @@ function main(){
   // Intro
   if (beat<32){
     if (introinit==0){subcycle=1;introinit=1};
-    // Starfield
     if (beat<25) {
       starfield(300,1,subcycle,0);
     }
     else if (beat>=25) {
       starfield(300,1,subcycle,1)
     }
-    // Titles
     if (beat<12){
       breaktitles(150,200,"Stage7",subcycle);
     }
@@ -961,10 +966,9 @@ function main(){
         gelogo();
       }
     }
-    //if (beat>48){subcycle=subcycle-2};
   }
 
-  // Effect1 (cubes)
+  // Cube sequence
   else if (beat<146){
     if (cubeinit==0){subcycle=1;cubeinit=1};
     posx=300+(Math.sin(Math.PI*cycle/2.3*2/45+(Math.PI/4))*425)/2;
@@ -995,8 +999,8 @@ function main(){
     }
   }
 
-  // Effect 2 (Torsion)
-  else if (beat<178){
+  // Torsion (Replace)
+  else if (beat<=178){
     if (torsioninit==0){subcycle=1;torsioninit=1};
     noclear=0;
     torsion(cycle);
@@ -1006,11 +1010,12 @@ function main(){
     }
   }
 
-  else if (beat<212){
+  // Meatballs
+  else if (beat<=214){
     meatballs(cycle);
     if (beat>196){
       if (meattext==0){subcycle=1;meattext=1};
-      bouncescroll(550,"meatball bouncy text",subcycle*2,20)
+      bouncescroll(550,"Code+music<64kB!",subcycle*2,20)
     }
   }
 
@@ -1019,13 +1024,13 @@ function main(){
     if (greettext==0){subcycle=1;greettext=1};
     bezierscroll(400,"Greetings to:",subcycle);
     bezierscroll(500,"PKT Team",subcycle-100);
-    bezierscroll(200,"Dude B",subcycle-150);
+    bezierscroll(200,"???????",subcycle-150);
     bezierscroll(300,"ASD",subcycle-200);
     bezierscroll(400,"Fairlight",subcycle-250);
-    bezierscroll(550,"Dude E",subcycle-300);
+    bezierscroll(550,"???????",subcycle-300);
     bezierscroll(300,"Farbrausch",subcycle-350);
-    bezierscroll(200,"Dude G",subcycle-400);
-    bezierscroll(500,"Dude H",subcycle-450);
+    bezierscroll(200,"???????",subcycle-400);
+    bezierscroll(500,"???????",subcycle-450);
     bezierscroll(300,"EKparty scene crew",subcycle-500);
 
   }
@@ -1035,6 +1040,7 @@ function main(){
     ctx.fillText("buildup",10,50);
   }
 
+  // Lasers
   else if (beat<270){
     laz0r(Math.floor(cycle/5));
     laz0r2(500,100,"green",cycle);
@@ -1044,12 +1050,21 @@ function main(){
     else if (beat%2==1){ctx.fillText("\\(^o^_)",265,300);}
   }
 
-  // More effects
+  
   else if (beat<286){
     laz0r(Math.floor(cycle/5));
     laz0r2(500,100,"green",cycle);
     laz0r2(-10,400,"green",cycle);
     meatballs(cycle);
+  }
+
+  // Fireworks
+  else {
+    firework(000,600,100,100,256,000,000,1,cycle%150);
+    firework(600,600,550,125,256,128,000,2,(cycle-40)%200);
+    firework(250,600,225,200,000,000,256,3,(cycle-100)%175);
+    firework(375,600,355,120,256,000,256,4,(cycle-75)%175);
+    gelogo();
   }
 
   }
