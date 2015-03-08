@@ -714,14 +714,14 @@ function torsion(step){
   step: Clock signal
   */
 
-  tpost1=[250+Math.cos(step*Math.PI/90)*100,       250-100*3/5+Math.sin(step*Math.PI/90)*30];
-  tpost2=[250+Math.cos((step+45)*Math.PI/90)*100,  250-100*3/5+Math.sin((step+45)*Math.PI/90)*30];
-  tpost3=[250+Math.cos((step+90)*Math.PI/90)*100,  250-100*3/5+Math.sin((step+90)*Math.PI/90)*30];
-  tpost4=[250+Math.cos((step+135)*Math.PI/90)*100, 250-100*3/5+Math.sin((step+135)*Math.PI/90)*30];
-  tposb1=[250+Math.cos((step+22)*Math.PI/90)*100,  350-100*3/5+Math.sin((step+22)*Math.PI/90)*30];
-  tposb2=[250+Math.cos((step+67)*Math.PI/90)*100,  350-100*3/5+Math.sin((step+67)*Math.PI/90)*30];
-  tposb3=[250+Math.cos((step+112)*Math.PI/90)*100, 350-100*3/5+Math.sin((step+112)*Math.PI/90)*30];
-  tposb4=[250+Math.cos((step+157)*Math.PI/90)*100, 350-100*3/5+Math.sin((step+157)*Math.PI/90)*30];
+  tpost1=[250+Math.cos((step+(20*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100,       250-100*3/5+Math.sin(step*Math.PI/90)*30];
+  tpost2=[250+Math.cos((step+45+(20*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100,  250-100*3/5+Math.sin((step+45)*Math.PI/90)*30];
+  tpost3=[250+Math.cos((step+90+(20*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100,  250-100*3/5+Math.sin((step+90)*Math.PI/90)*30];
+  tpost4=[250+Math.cos((step+135+(20*Math.sin(Math.PI*cycle/30)))*Math.PI/90)*100, 250-100*3/5+Math.sin((step+135)*Math.PI/90)*30];
+  tposb1=[250+Math.cos((step+22+(20*Math.cos(Math.PI*cycle/50)))*Math.PI/90)*100,  350-100*3/5+Math.sin((step+22)*Math.PI/90)*30];
+  tposb2=[250+Math.cos((step+67+(20*Math.cos(Math.PI*cycle/50)))*Math.PI/90)*100,  350-100*3/5+Math.sin((step+67)*Math.PI/90)*30];
+  tposb3=[250+Math.cos((step+112+(20*Math.cos(Math.PI*cycle/50)))*Math.PI/90)*100, 350-100*3/5+Math.sin((step+112)*Math.PI/90)*30];
+  tposb4=[250+Math.cos((step+157+(20*Math.cos(Math.PI*cycle/50)))*Math.PI/90)*100, 350-100*3/5+Math.sin((step+157)*Math.PI/90)*30];
 
   for (i=1; i<=4; i++){
     // Top segments
@@ -865,7 +865,7 @@ firewinit=0;
 torsioninit=0;
 
 // Testing
-test=0;
+test=1;
 
 // Effect vars
 for (i=0; i<26; i++){
@@ -900,7 +900,7 @@ function main(){
   // octopus(cycle);
 
   // [WIP] Torsion
-  //torsion(cycle);
+  torsion(cycle);
 
   // [WIP] Tunnel
   // if (beat%4<=1){tunnel(300,300,1,cycle);}
@@ -1102,6 +1102,9 @@ function main(){
       ctx.fillText("Yes, it's over",100,500);
       if (beat>330){
         ctx.fillText("Really!",275,500);
+        if (beat>350){
+          ctx.fillText("Go home already",200,550);
+        }
       }
     }
   }
@@ -1141,7 +1144,6 @@ function menu(){
   drawline(0,350,600,350);
   ctx.fillText("PLAY",225,310);
   done=1;
-
   c.addEventListener("mousedown",demo,false)
 }
 
