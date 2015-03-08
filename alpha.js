@@ -219,6 +219,7 @@ function sinescroll(y,text,step,speed,oscil,space){
   draw();  
 }
 
+// used
 function bouncescroll(y,text,step,oscil){
   /*
   Same as sinescroll, but bouncing
@@ -540,7 +541,7 @@ function starfield(stars,speed,sstep,die){
   }
 }
 
-laz0rcolours=["RED","GREEN","BLUE","YELLOW","PINK","#FABADA","#C0FFEE","#FFF000"]
+laz0rcolours=["RED","GREEN","BLUE","YELLOW","PINK","#FABADA"]
 laz0rstep="WTF";
 function laz0r(step){
   /*
@@ -604,7 +605,7 @@ function octopus(step){
   // ctx.fill();
 }
 
-//TO-DO
+// TO-DO
 function plasma(step){
   /*
   Plasma effect
@@ -642,6 +643,7 @@ function meatballs(step){
   }
 }
 
+// used
 function firework(x1,y1,x2,y2,RR,GG,BB,pooln,step){
   /*
   Draws a firework
@@ -663,6 +665,7 @@ function firework(x1,y1,x2,y2,RR,GG,BB,pooln,step){
   if (step==99){eval("explpool"+pooln+"=[]")}
 }
 
+// used
 function particlexplosion(x,y,R,G,B,pooln,step){
   /* 
   Draws an exploding thingy. 
@@ -796,7 +799,7 @@ function gelogo(){
   ctx.fillText("encounter",247,362);
   ctx.font="45px sans-serif";
   ctx.fillText("9",375,362)
-  ctx.font="20px sans-serif bold";
+  ctx.font="25px sans-serif bold";
 }
 
 function draw(){
@@ -846,16 +849,22 @@ tunninit=0;
 tunn2init=0;
 meattext=0;
 greettext=0;
-torsioninit=0;
+explinit=0;
+firewinit=0;
 
 // Testing
 test=0;
 
 // Effect vars
-for (i=1; i<10; i++){
-  eval("explpool"+i+"=[]");
-  eval("partcycle"+i+"=0");
+for (i=0; i<26; i++){
+  eval("explpool"+(i+1)+"=[]");
+  eval("partcycle"+(i+1)+"=0");
 }
+for (i=0; i<4; i++){
+  eval("randexcoords"+(i+1)+"=[100+Math.random()*400,100+Math.random()*400]")
+  eval("partlastbeat"+(i+1)+"=prevbeat")
+}
+
 
 function main(){
   /*
@@ -889,6 +898,8 @@ function main(){
   // firework(250,600,225,200,000,000,256,3,(cycle-100)%175);
   // firework(375,600,355,120,256,000,256,4,(cycle-75)%175);
   // gelogo();
+
+  // particlexplosion(200,400,256,000,000,1,cycle%96);
 
   // [WIP] Octopus
   // octopus(cycle);
@@ -984,7 +995,7 @@ function main(){
       }
       else if (beat>=113 && beat<130){
         if (prevbeat!=beat){
-          cubefill=laz0rcolours[Math.floor(Math.random()*6.9)];
+          cubefill=laz0rcolours[Math.floor(Math.random()*laz0rcolours.length)];
           cubeside=Math.floor(1+Math.random()*6.9);
         }
         ctx.fillStyle=cubefill;
@@ -999,25 +1010,48 @@ function main(){
     }
   }
 
-  // Torsion (Replace)
+  // Explosions
   else if (beat<=178){
-    if (torsioninit==0){subcycle=1;torsioninit=1};
-    noclear=0;
-    torsion(cycle);
-    sinescroll(400,"                     Ghetto torsion!",subcycle,3,10,20);
+    if (explinit==0){
+      subcycle=1;
+      explinit=1;
+      noclear=0;
+    }
+    
+    if (beat%4==3 && partlastbeat1!=beat){
+      randexcoords1=[100+Math.random()*400,100+Math.random()*400];
+      partlastbeat1=beat;
+    }
+    else if (beat%4==0 && partlastbeat2!=beat){
+      randexcoords2=[100+Math.random()*400,100+Math.random()*400];
+      partlastbeat2=beat;
+    }
+    else if (beat%4==1 && partlastbeat3!=beat){
+      randexcoords3=[100+Math.random()*400,100+Math.random()*400];
+      partlastbeat3=beat;
+    }
+    else if (beat%4==2 && partlastbeat4!=beat){
+      randexcoords4=[100+Math.random()*400,100+Math.random()*400];
+      partlastbeat4=beat;
+    }
+    particlexplosion(randexcoords1[0],randexcoords1[1],256,000,000,1,cycle%96);
+    particlexplosion(randexcoords2[0],randexcoords2[1],256,256,000,2,(cycle-24)%96);
+    particlexplosion(randexcoords3[0],randexcoords3[1],000,256,256,2,(cycle-48)%96);
+    particlexplosion(randexcoords4[0],randexcoords4[1],256,000,256,2,(cycle-72)%96);
     if (beat>162){
-      torsion(subcycle);
     }
   }
 
   // Meatballs
-  else if (beat<=214){
+  else if (beat<214){
     meatballs(cycle);
     if (beat>196){
       if (meattext==0){subcycle=1;meattext=1};
       bouncescroll(550,"Code+music<64kB!",subcycle*2,20)
     }
   }
+
+  else if (beat<215){}
 
   // Slow part (credits/greetings)
   else if (beat<245){
@@ -1051,7 +1085,7 @@ function main(){
   }
 
   
-  else if (beat<286){
+  else if (beat<285){
     laz0r(Math.floor(cycle/5));
     laz0r2(500,100,"green",cycle);
     laz0r2(-10,400,"green",cycle);
@@ -1060,11 +1094,18 @@ function main(){
 
   // Fireworks
   else {
+    if (firewinit==0){subcycle=1;firewinit=1};
     firework(000,600,100,100,256,000,000,1,cycle%150);
     firework(600,600,550,125,256,128,000,2,(cycle-40)%200);
     firework(250,600,225,200,000,000,256,3,(cycle-100)%175);
     firework(375,600,355,120,256,000,256,4,(cycle-75)%175);
     gelogo();
+    if (beat>310){
+      ctx.fillText("Yes, it's over",100,500);
+      if (beat>350){
+        ctx.fillText("Really!",275,500);
+      }
+    }
   }
 
   }
