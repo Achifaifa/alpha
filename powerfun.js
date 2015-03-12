@@ -1267,8 +1267,8 @@ function menu(){
   done=0;
   ctx.fillStyle="white"
   ctx.fillText("LOADERING",250,310);
-  track=new Audio("ps-audio.wav");
-  track.src="./ps-audio.wav";
+  track=new Audio("pf-audio.wav");
+  track.src="./pf-audio.wav";
   
   track.addEventListener("canplaythrough",function(){
     ctx.clearRect(0,0,600,600);
