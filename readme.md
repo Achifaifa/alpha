@@ -9,5 +9,5 @@ Use: Open index.html in firefox/chrome and press 'play'
 
 Coded for Gipuzkoa Encounter 09 (2015)
 
-[Live](http://achi.se/projects/software/demos/powerfun)
+[Live](http://achi.se/projects/software/demos/powerfun)  
 [Github](https://github.com/achifaifa/powerfun)

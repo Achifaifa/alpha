@@ -33,8 +33,8 @@ function drawcube(x,y,side,rot){
   vs=Math.sin(rot)*side;
   hs=Math.cos(rot)*side;
   // calculate displacement
-  dy=Math.sin(rot*side)/2
-  dx=Math.cos(rot*side)/2
+  dy=Math.sin(rot*side)/2;
+  dx=Math.cos(rot*side)/2;
   x=x-dx; y=y-dy;
 
   // Draw lines between vertices
@@ -67,9 +67,9 @@ function threedcube(colour,step){
   */
 
   // Position and size
-  rotcubex=300
-  rotcubey=300
-  rotcubes=100
+  rotcubex=300;
+  rotcubey=300;
+  rotcubes=100;
   // Draw moving points
   cubepoint1=[rotcubex+Math.cos(step*0.035)*100,       rotcubey-rotcubes*0.6+Math.sin(step*0.035)*30];
   cubepoint2=[rotcubex+Math.cos((step+45)*0.035)*100,  rotcubey-rotcubes*0.6+Math.sin((step+45)*0.035)*30];
@@ -186,16 +186,16 @@ function bezierscroll(y,text,step){
     /*
     Gets bezier coordinates from y position and step
     */
-    beziert=step*0.01
-    bezierxpos=600*(1-beziert)*(Math.pow(1-beziert,2)+3*Math.pow(beziert,2))
-    bezierypos=y*(Math.pow(1-beziert,3)+Math.pow(beziert,3))+(y-100)*3*(beziert-Math.pow(beziert,2))
+    beziert=step*0.01;
+    bezierxpos=600*(1-beziert)*(Math.pow(1-beziert,2)+3*Math.pow(beziert,2));
+    bezierypos=y*(Math.pow(1-beziert,3)+Math.pow(beziert,3))+(y-100)*3*(beziert-Math.pow(beziert,2));
   }
 
   // Just in case
   ctx.beginPath();
   // Get positions and draw stuff in them
   for (i=0; i<text.length; i++){
-    updatebezpos(y,step-(i*5))
+    updatebezpos(y,step-(i*5));
     ctx.fillText(text[i],bezierxpos,bezierypos);
   }
 }
@@ -284,7 +284,7 @@ function magglasstext(x,y,text,step){
 
   for (i=0; i<text.length; i++){
     xpos=600-10*step+i*20;
-    fontsize=15+70*Math.sqrt(1/Math.abs(x-xpos));
+    fontsize=15+(100*Math.sqrt(1/Math.abs(x-xpos)));
     //fontsize=15;
     eval("ctx.font='"+fontsize+"px sans-serf bold'");
     ctx.fillText(text[i],xpos,y);
@@ -449,7 +449,7 @@ function sunsetdrive(step){
     // grad.addColorStop(1, "blue");   
     // grad.addColorStop(0, "red");
     // ctx.fillStyle=grad
-    ctx.fillStyle="red"
+    ctx.fillStyle="red";
   }    
   else if (sunypos<300){    // Day (Do nothing because day is boring as fuck)
     ctx.fillStyle="blue";
@@ -491,7 +491,7 @@ function sunsetdrive(step){
   // Cover sun if below the horizon
   ctx.beginPath();
   ctx.strokeStyle="black";
-  ctx.clearRect(0,400,600,200)
+  ctx.clearRect(0,400,600,200);
 
   // Draw grass and road
   ctx.beginPath();
@@ -546,18 +546,18 @@ function starfield(stars,step,die){
     */
 
     // calculate X and Y coordinates
-    starxsign=1
-    starysign=1
+    starxsign=1;
+    starysign=1;
     if (Math.cos(starobj.dir)<0){starxsign=-1}
     if (Math.sin(starobj.dir)<0){starysign=-1}
     
-    starymax=300
-    starxmax=300
+    starymax=300;
+    starxmax=300;
     if (2.355<starobj.dir<3.925 || 5.495<starobj.dir<7.075) {starymax=Math.abs(400*Math.sin(starobj.dir))}
     if (0.785<starobj.dir<2.355 || 3.925<starobj.dir<5.495) {starxmax=Math.abs(400*Math.cos(starobj.dir))}
 
-    starxpos=300+starxsign*starxmax*starobj.step/starobj.speed
-    starypos=300+starysign*starymax*starobj.step/starobj.speed
+    starxpos=300+starxsign*starxmax*starobj.step/starobj.speed;
+    starypos=300+starysign*starymax*starobj.step/starobj.speed;
 
     // Draw the star
     starsize=1+(4*starobj.step/starobj.speed)
@@ -570,7 +570,7 @@ function starfield(stars,step,die){
     else if (die==0){
       starobj.speed=50+20*Math.random();
       starobj.step=Math.random()*starobj.speed;
-      starobj.dir=Math.random()*6.28
+      starobj.dir=Math.random()*6.28;
     }
   }
 
@@ -581,8 +581,8 @@ function starfield(stars,step,die){
     for (i=0; i<stars; i++){
       starsobj[i]={"speed":(50+20*Math.random()),"dir":2*Math.random()*3.14}
       // Make the star start at a random point
-      starsobj[i].step=Math.random()*starsobj[i].speed
-      starsobj.size++
+      starsobj[i].step=Math.random()*starsobj[i].speed;
+      starsobj.size++;
     }
   };
 
@@ -601,11 +601,11 @@ function laz0r(step){
 
   // Pick start and end points
   if (laz0rstep!=step){
-    laz0rx1=Math.random()*600
-    laz0ry1=Math.random()*600
-    laz0rx2=Math.random()*600
-    laz0ry2=Math.random()*600
-    laz0rstep=step
+    laz0rx1=Math.random()*600;
+    laz0ry1=Math.random()*600;
+    laz0rx2=Math.random()*600;
+    laz0ry2=Math.random()*600;
+    laz0rstep=step;
   }
   // Goto start point and draw a line
   ctx.beginPath();
@@ -667,6 +667,43 @@ function meatballs(step){
   }
 }
 
+firebase=[]
+function fire(step){
+  /* 
+  Classy fire effect
+
+  step: clock signal
+  */
+  
+  // step=1+Math.floor(step/100)
+  if (step==1){
+    for (i=0; i<20; i++){
+      firebase.push(Math.floor(Math.random()*256));
+    }
+  }
+  else {
+    for (i=0; i<firebase.length; i++){
+      addors=Math.floor(2*Math.random())
+      if (addors==0){firebase[i]=Math.abs(firebase[i]+Math.floor(64*Math.random()))%256}
+      if (addors==1){firebase[i]=Math.abs(firebase[i]-Math.floor(64*Math.random()))%256}
+    }
+  }
+  previousline=firebase;
+  for (i=20; i>0; i--){
+    actualline=[];
+    for (j=0; j<20; j++){
+      if (j==0)       {tilecolour=Math.floor((0+previousline[j]+previousline[j+1])/3)-6}   
+      else if (j==19)  {tilecolour=Math.floor((0+previousline[j]+previousline[j-1])/3)-6}  
+      else            {tilecolour=Math.floor((previousline[j-1]+previousline[j]+previousline[j+1])/3)-5}
+      actualline.push(tilecolour);
+      eval("ctx.fillStyle='rgba("+tilecolour+",0,0,1)'");
+      ctx.fillRect(j*30,i*30,30,30);
+      ctx.stroke();
+    }
+    previousline=actualline;
+  }
+}
+
 function frenchname(step){
   /*
   Draws lissajous curves
@@ -694,7 +731,6 @@ function frenchname(step){
     eval("ctx.fillStyle='rgba("+Math.floor(128+128*Math.sin(traildeg+i))+","+Math.floor(128+128*Math.cos(traildeg+i/2))+","+Math.floor(128+128*Math.cos(traildeg+i/4))+",1)'")
     ctx.fillRect(frenchxi,frenchyi,5,5);
   }
-  noclear=0
 }
 
 function firework(x1,y1,x2,y2,RR,GG,BB,pooln,step){
@@ -745,7 +781,7 @@ function particlexplosion(x,y,R,G,B,pooln,step){
     if (object.die>step){
       expartxpos=x+object.hs*step;
       expartypos=y+object.vs*step;
-      ctx.fillRect(expartxpos,expartypos,2,2)
+      ctx.fillRect(expartxpos,expartypos,2,2);
     }
   }
 
@@ -756,7 +792,7 @@ function particlexplosion(x,y,R,G,B,pooln,step){
   for (i=0; eval("i<explpool"+pooln+".length"); i++){
     eval("drawexpart(explpool"+pooln+"[i],step)");
   }
-  ctx.fillStyle="white"
+  ctx.fillStyle="white";
 }
 
 function torsion(step){
@@ -807,7 +843,7 @@ function snow(step,stop){
   Coded during FOSDEM. Better souvenir than an actual snowball
   */
 
-  snowdropn=500
+  snowdropn=500;
   
   // Move each drop individually
   function movedrop(snowdrop){
@@ -815,7 +851,7 @@ function snow(step,stop){
       snowdrop.x-snowdrop.plane*snowdrop.snowstep+25*Math.sin(snowdrop.snowstep*3.14/32),
       snowdrop.snowstep*snowdrop.plane,
       1+(snowdrop.plane/2),1+(snowdrop.plane/2) // Snow drop size
-    )
+    );
     if (snowlist[i].snowstep*snowlist[i].plane>600 && stop==0){snowlist[i].snowstep=0}
     else {snowlist[i].snowstep++}
   }
@@ -864,6 +900,7 @@ function gelogo(){
   ctx.font="45px sans-serif";
   ctx.fillText("9",375,362)
   ctx.font="25px sans-serif bold";
+
 }
 
 function trail(step){
@@ -937,7 +974,7 @@ torsioninit=0;
 moretextinit=0;
 
 // Testing
-test=0;
+test=1;
 
 // Effect vars
 for (i=0; i<26; i++){
@@ -957,35 +994,22 @@ function main(){
 
   // Clear screen
   if(noclear==0){ctx.clearRect(0,0,600,600);}
-  ctx.fillStyle="white"
-  ctx.strokeStyle="white"
+  ctx.fillStyle="white";
+  ctx.strokeStyle="white";
 
   // Effect testing
 
   // Drive scene
   // sunsetdrive(cycle);
 
-  // [WIP] Octopus
+  // Octopus
   // octopus(300,300,cycle);
-  // zoomscroll(400,"TESTTESTEIORSNTREISNO",cycle)
 
-  //torsion(cycle);
+  fire(cycle);
 
-  // trail(cycle);
-
-  //frenchname(cycle);
-
-  // octopus(300,300,cycle);
-  // normscroll(500,"Hope you enjoyed this silly demo. Now go make your own! :D",cycle);
-
-  // magglasstext(300,300,"MAGNIFYING TEST",cycle)
-
-  // starfield(200,cycle,0);
-
-  // [WIP] Tunnel
-  //tunnel(300,300,cycle);
-
-  // Text display tests
+  // Scrollers
+  // magglasstext(300,300,"MAGNIFYING TEST with a very very long string",cycle)
+  // zoomscroll(300,"TEST STRING",cycle)
   // bezierscroll(250,"BEZIER TEST !!1!eleven!",(cycle%300),1);
   // bouncescroll(550, "BOUNCE TEST",cycle,15);
 
@@ -1008,7 +1032,7 @@ function main(){
       breaktitles(150,200,"Achifaifa",subcycle-100);
     }
     else if (beat<23){
-      breaktitles(150,275,"Present",subcycle-250);
+      breaktitles(150,275,"Present:",subcycle-250);
     }
     else if (beat>=23){
       breaktitles(200,300,"POWERFUN",subcycle-400)
@@ -1177,6 +1201,7 @@ function main(){
 
   // Lasers and shit
   else if (beat<269){
+
     if (beat%2==0){ctx.fillText("_(^o^\\)",265,250);}
     else if (beat%2==1){ctx.fillText("\\(^o^_)",265,250);}
     ctx.fillText("_________",250,260);
@@ -1197,16 +1222,16 @@ function main(){
     laz0r2(500,100,"green",cycle);
     laz0r2(-20,-20,"green",cycle);
     ctx.clearRect(0,400,600,200);
+    // Drawing fire first so it stays in the background
+    if (beat>260){
+      fire(cycle);
+    }
     laz0r(Math.floor(cycle/5));
     ctx.font="100px sans-serif bold";
     if (beat%3==0){ctx.fillText("ENJOY",125,500); }
     if (beat%3==1){ctx.fillText("THE",  170,500); }
     if (beat%3==2){ctx.fillText("PARTY",130,500); }
     ctx.font="25px sans-serif bold";
-
-    if (beat>260){
-      
-    }
   }
 
   // octoamoeba
@@ -1265,7 +1290,6 @@ function demo(ev){
 function menu(){
   menuc=0;
   done=0;
-  ctx.fillStyle="white"
   ctx.fillText("LOADERING",250,310);
   track=new Audio("pf-audio.wav");
   track.src="./pf-audio.wav";
