@@ -92,6 +92,7 @@ function threedcube(colour,step){
   drawline(cubepoint3[0],cubepoint3[1],cubepoint7[0],cubepoint7[1]);
   drawline(cubepoint4[0],cubepoint4[1],cubepoint8[0],cubepoint8[1]);
 
+  // Colour different sides
   if (colour==1){
     ctx.beginPath();
     ctx.moveTo(cubepoint1[0],cubepoint1[1]);
@@ -266,7 +267,7 @@ function octopus(x,y,step){
     prevtypos=tunnypos;
     prevsectsize=sectionsize;
     // Draw the amoeba body
-    // if (i==0){drawsphere(tunnxpos,tunnypos,20);}
+    if (i==14){drawsphere(tunnxpos,tunnypos,48);}
   }
 }
 
@@ -700,12 +701,16 @@ function fire(step){
     }
     previousline=actualline;
   }
+}
 
-  // Position and size
+function chicken(step){
+  /*
+  No body calls chicken();
+  */
+
   rotcubex=300;
   rotcubey=300;
   rotcubes=100;
-  // Draw moving points
   cubepoint1=[rotcubey-rotcubes*0.6+Math.cos(step*0.035)*30,        rotcubex+Math.sin(step*0.035)*100       ];
   cubepoint2=[rotcubey-rotcubes*0.6+Math.cos((step+45)*0.035)*30,   rotcubex+Math.sin((step+45)*0.035)*100  ];
   cubepoint3=[rotcubey-rotcubes*0.6+Math.cos((step+90)*0.035)*30,   rotcubex+Math.sin((step+90)*0.035)*100, ];
@@ -735,7 +740,6 @@ function fire(step){
   handlepos1=[450+Math.cos(step*0.035)*10, 300+Math.sin(step*0.035)*20 ];
   drawline(handlefix[0],handlefix[1],handlepos1[0],handlepos1[1])
   drawline(handlepos1[0],handlepos1[1],handlepos1[0]+30,handlepos1[1])
-
 }
 
 function frenchname(step){
@@ -750,19 +754,19 @@ function frenchname(step){
   for (i=0; i<5; i++){
     frenchx=300+150*(Math.sin((step-i)/13)+Math.cos((step-i)/37));
     frenchy=300+150*(Math.cos((step-i)/10)+Math.sin((step-i)/10));
-    eval("ctx.fillStyle='rgba("+Math.floor(128+128*Math.sin(traildeg+i))+","+Math.floor(128+128*Math.cos(traildeg+i/2))+","+Math.floor(128+128*Math.cos(traildeg+i/4))+",1)'")
+    eval("ctx.fillStyle='rgba("+Math.floor(128+64*Math.sin(traildeg+i))+","+Math.floor(128+64*Math.cos(traildeg+i/3 ))+","+Math.floor(128+64*Math.cos(traildeg+i/2))+",1)'")
     ctx.fillRect(frenchx,frenchy,5,5);
   }
   for (i=0; i<5; i++){
     frenchxi=300+150*(Math.sin((step-i)/10)+Math.cos((step-i)/23));
     frenchyi=300+150*(Math.cos((step-i)/4)+Math.sin((step-i)/15));
-    eval("ctx.fillStyle='rgba("+Math.floor(128+128*Math.sin(traildeg+i))+","+Math.floor(128+128*Math.cos(traildeg+i/2))+","+Math.floor(128+128*Math.cos(traildeg+i/4))+",1)'")
+    eval("ctx.fillStyle='rgba("+Math.floor(128+64*Math.sin(traildeg+i))+","+Math.floor(128+64*Math.cos(traildeg+i/3 ))+","+Math.floor(128+64*Math.cos(traildeg+i/2))+",1)'")
     ctx.fillRect(frenchxi,frenchyi,5,5);
   }
   for (i=0; i<5; i++){
     frenchxi=300+150*(Math.sin((step-i)/20)+Math.cos((step-i)/10));
     frenchyi=300+150*(Math.cos((step-i)/25)+Math.sin((step-i)/4));
-    eval("ctx.fillStyle='rgba("+Math.floor(128+128*Math.sin(traildeg+i))+","+Math.floor(128+128*Math.cos(traildeg+i/2))+","+Math.floor(128+128*Math.cos(traildeg+i/4))+",1)'")
+    eval("ctx.fillStyle='rgba("+Math.floor(128+64*Math.sin(traildeg+i))+","+Math.floor(128+64*Math.cos(traildeg+i/3 ))+","+Math.floor(128+64*Math.cos(traildeg+i/2))+",1)'")
     ctx.fillRect(frenchxi,frenchyi,5,5);
   }
 }
@@ -948,7 +952,7 @@ function trail(step){
   for (i=20; i>0; i--){
     //trailxpos=300+200*(Math.sin(traildeg+5*i/10));
     trailxpos=300+125*Math.sin(traildeg+i/5)+75*Math.cos(traildeg+i/10)
-    eval("ctx.fillStyle='rgba("+Math.floor(128+128*Math.sin(traildeg+i))+","+Math.floor(128+128*Math.cos(traildeg+i/2))+","+Math.floor(128+128*Math.cos(traildeg+i/4))+",1)'")
+    eval("ctx.fillStyle='rgba("+Math.floor(192+64*Math.sin(traildeg+i))+","+Math.floor(192+64*Math.cos(traildeg+i/3 ))+","+Math.floor(192+64*Math.cos(traildeg+i/2))+",1)'")
     ctx.fillRect(trailxpos,600-25*i,30,25*i);
   }
   ctx.fillStyle="white";
@@ -1033,13 +1037,17 @@ function main(){
 
   // Effect testing
 
+  // trail(cycle)
+  // frenchname(cycle);
+
   // Drive scene
   // sunsetdrive(cycle);
 
   // Octopus
-  // octopus(300,300,cycle);
+  octopus(300,300,cycle);
 
-  fire(cycle);
+  // fire(cycle);
+  // chicken(cycle);
 
   // Scrollers
   // magglasstext(300,300,"MAGNIFYING TEST with a very very long string",cycle)
