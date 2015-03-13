@@ -674,10 +674,9 @@ function fire(step){
 
   step: clock signal
   */
-  
-  // step=1+Math.floor(step/100)
+
   if (step==1){
-    for (i=0; i<20; i++){
+    for (i=0; i<40; i++){
       firebase.push(Math.floor(Math.random()*256));
     }
   }
@@ -689,19 +688,54 @@ function fire(step){
     }
   }
   previousline=firebase;
-  for (i=20; i>0; i--){
+  for (i=40; i>0; i--){
     actualline=[];
-    for (j=0; j<20; j++){
-      if (j==0)       {tilecolour=Math.floor((0+previousline[j]+previousline[j+1])/3)-6}   
-      else if (j==19)  {tilecolour=Math.floor((0+previousline[j]+previousline[j-1])/3)-6}  
-      else            {tilecolour=Math.floor((previousline[j-1]+previousline[j]+previousline[j+1])/3)-5}
+    for (j=0; j<40; j++){
+      if (j==0)       {tilecolour=Math.floor((0+previousline[j]+previousline[j+1])/3)-3}   
+      else if (j==39)  {tilecolour=Math.floor((0+previousline[j]+previousline[j-1])/3)-3}  
+      else            {tilecolour=Math.floor((previousline[j-1]+previousline[j]+previousline[j+1])/3)-7}
       actualline.push(tilecolour);
       eval("ctx.fillStyle='rgba("+tilecolour+",0,0,1)'");
-      ctx.fillRect(j*30,i*30,30,30);
-      ctx.stroke();
+      ctx.fillRect(j*15,i*15,15,15);
     }
     previousline=actualline;
   }
+
+  // Position and size
+  rotcubex=300;
+  rotcubey=300;
+  rotcubes=100;
+  // Draw moving points
+  cubepoint1=[rotcubey-rotcubes*0.6+Math.cos(step*0.035)*30,        rotcubex+Math.sin(step*0.035)*100       ];
+  cubepoint2=[rotcubey-rotcubes*0.6+Math.cos((step+45)*0.035)*30,   rotcubex+Math.sin((step+45)*0.035)*100  ];
+  cubepoint3=[rotcubey-rotcubes*0.6+Math.cos((step+90)*0.035)*30,   rotcubex+Math.sin((step+90)*0.035)*100, ];
+  cubepoint4=[rotcubey-rotcubes*0.6+Math.cos((step+135)*0.035)*30,  rotcubex+Math.sin((step+135)*0.035)*100 ];
+  cubepoint5=[cubepoint1[0]+125,cubepoint1[1]];
+  cubepoint6=[cubepoint2[0]+125,cubepoint2[1]];
+  cubepoint7=[cubepoint3[0]+125,cubepoint3[1]];
+  cubepoint8=[cubepoint4[0]+125,cubepoint4[1]];
+  drawline(cubepoint1[0],cubepoint1[1],cubepoint2[0],cubepoint2[1]);
+  drawline(cubepoint2[0],cubepoint2[1],cubepoint3[0],cubepoint3[1]);
+  drawline(cubepoint3[0],cubepoint3[1],cubepoint4[0],cubepoint4[1]);
+  drawline(cubepoint4[0],cubepoint4[1],cubepoint1[0],cubepoint1[1]);
+  drawline(cubepoint5[0],cubepoint5[1],cubepoint6[0],cubepoint6[1]);
+  drawline(cubepoint6[0],cubepoint6[1],cubepoint7[0],cubepoint7[1]);
+  drawline(cubepoint7[0],cubepoint7[1],cubepoint8[0],cubepoint8[1]);
+  drawline(cubepoint8[0],cubepoint8[1],cubepoint5[0],cubepoint5[1]);
+  drawline(cubepoint1[0],cubepoint1[1],cubepoint5[0],cubepoint5[1]);
+  drawline(cubepoint2[0],cubepoint2[1],cubepoint6[0],cubepoint6[1]);
+  drawline(cubepoint3[0],cubepoint3[1],cubepoint7[0],cubepoint7[1]);
+  drawline(cubepoint4[0],cubepoint4[1],cubepoint8[0],cubepoint8[1]);
+  drawline(150,300,450,300);
+  drawline(160,305,160,600);
+  drawline(440,305,440,600);
+  drawsphere(rotcubey-rotcubes*0.6,300,3);
+  drawsphere(rotcubey+rotcubes*0.6,300,3);
+  handlefix=[450,300];
+  handlepos1=[450+Math.cos(step*0.035)*10, 300+Math.sin(step*0.035)*20 ];
+  drawline(handlefix[0],handlefix[1],handlepos1[0],handlepos1[1])
+  drawline(handlepos1[0],handlepos1[1],handlepos1[0]+30,handlepos1[1])
+
 }
 
 function frenchname(step){
@@ -1200,7 +1234,7 @@ function main(){
   }
 
   // Lasers and shit
-  else if (beat<269){
+  else if (beat<260){
 
     if (beat%2==0){ctx.fillText("_(^o^\\)",265,250);}
     else if (beat%2==1){ctx.fillText("\\(^o^_)",265,250);}
@@ -1222,16 +1256,17 @@ function main(){
     laz0r2(500,100,"green",cycle);
     laz0r2(-20,-20,"green",cycle);
     ctx.clearRect(0,400,600,200);
-    // Drawing fire first so it stays in the background
-    if (beat>260){
-      fire(cycle);
-    }
     laz0r(Math.floor(cycle/5));
     ctx.font="100px sans-serif bold";
     if (beat%3==0){ctx.fillText("ENJOY",125,500); }
     if (beat%3==1){ctx.fillText("THE",  170,500); }
     if (beat%3==2){ctx.fillText("PARTY",130,500); }
     ctx.font="25px sans-serif bold";
+  }
+
+  // Drawing fire first so it stays in the background
+  if (beat<269){
+    fire(cycle);
   }
 
   // octoamoeba
