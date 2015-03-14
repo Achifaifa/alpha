@@ -285,7 +285,7 @@ function magglasstext(x,y,text,step){
 
   for (i=0; i<text.length; i++){
     xpos=600-10*step+i*20;
-    fontsize=15+(100*Math.sqrt(1/Math.abs(x-xpos)));
+    fontsize=5+(50*Math.sqrt(10/Math.abs(x-xpos)));
     //fontsize=15;
     eval("ctx.font='"+fontsize+"px sans-serf bold'");
     ctx.fillText(text[i],xpos,y);
@@ -1007,12 +1007,13 @@ tunn2init=0;
 meattext=0;
 greettext=0;
 explinit=0;
+roastinit=0;
 firewinit=0;
 torsioninit=0;
 moretextinit=0;
 
 // Testing
-test=1;
+test=0;
 
 // Effect vars
 for (i=0; i<26; i++){
@@ -1044,13 +1045,13 @@ function main(){
   // sunsetdrive(cycle);
 
   // Octopus
-  octopus(300,300,cycle);
+  // octopus(300,300,cycle);
 
   // fire(cycle);
   // chicken(cycle);
 
   // Scrollers
-  // magglasstext(300,300,"MAGNIFYING TEST with a very very long string",cycle)
+  // magglasstext(300,300,"MAGNIFYING TEST",cycle)
   // zoomscroll(300,"TEST STRING",cycle)
   // bezierscroll(250,"BEZIER TEST !!1!eleven!",(cycle%300),1);
   // bouncescroll(550, "BOUNCE TEST",cycle,15);
@@ -1071,30 +1072,29 @@ function main(){
       breaktitles(150,200,"Stage7",subcycle);
     }
     else if (beat<14){
-      breaktitles(150,200,"Achifaifa",subcycle-100);
+      breaktitles(150,200,"Achifaifa",subcycle-200);
     }
     else if (beat<23){
-      breaktitles(150,275,"Present:",subcycle-250);
+      breaktitles(150,275,"Present:",subcycle-350);
     }
     else if (beat>=23){
-      breaktitles(200,300,"POWERFUN",subcycle-400)
+      breaktitles(200,300,"POWERFUN",subcycle-500)
     }
   }
 
   // Event reference
   else if (beat<81){
     if (eventinit==0){subcycle=1;eventinit=1};
-    if (subcycle<250){sinescroll(250,"HTML5!",(subcycle*2),2,8,20);}
-    if (subcycle<200){sinescroll(150,"Tracker magic",(subcycle*3)-100,2,10,20);}
-    if (subcycle<250){sinescroll(200,"JS!",(subcycle*2)-200,3,8,20); }
-    if (subcycle<320){sinescroll(250,"Canvas powered!",(subcycle*2)-150,2,5,20); }
-    if (subcycle<280){sinescroll(300,"Demoscene in your browser!",(subcycle*3)-225,2,7,20);}
-    if (subcycle>200){
-      sinescroll(200,"Made with      for",(subcycle*1.2)-270,2,5,20);
+    sinescroll(250,"HTML5!",(subcycle),2,8,20);
+    sinescroll(150,"Tracker magic",(subcycle)-100,2,10,20);
+    sinescroll(200,"JS!",(subcycle)-200,3,8,20); 
+    sinescroll(250,"Canvas powered!",(subcycle)-150,2,5,20); 
+    sinescroll(300,"Demoscene in your browser!",(subcycle*1.3)-225,2,7,20);
+    sinescroll(200,"Made with      for",(subcycle*0.8)-270,2,5,20);
       ctx.fillStyle="red";
-      sinescroll(200,"          love",(subcycle*1.2)-270,2,5,20);
+    sinescroll(200,"          love",(subcycle*0.8)-270,2,5,20);
       ctx.fillStyle="white";
-    }
+    
     if (beat>=79){
       if (cycle%2==0){
         ctx.fillStyle="black";
@@ -1127,7 +1127,7 @@ function main(){
     posx=300+(Math.sin(3.14*cycle/2.3*2/45+(3.14/4))*350)/2;
     posy=300+(Math.cos(3.14*cycle/1.3*2/45+(3.14/4))*350)/2;
     drawcube(posx,posy,100,3.14*(cycle)*2/45);
-    sinescroll(500,"Rotating cubes!                                 (Top view)",subcycle,4,5,20);
+    sinescroll(500,"I heard you like CUBES...           Here's a top view",subcycle,4,5,20);
     if (beat>=96){
       posxx=300+(Math.sin(3.14*(cycle+100)/2.3*2/45+(3.14/4))*350)/2;
       posyy=300+(Math.cos(3.14*(cycle+100)/3.4*2/45+(3.14/4))*350)/2;
@@ -1145,7 +1145,7 @@ function main(){
         prevbeat=beat;
         ctx.fillStyle="white";
       }
-      else if (beat>=130){
+      else if (beat>127){
         if (prevbeat!=beat){
           cubefill=laz0rcolours[Math.floor(Math.random()*laz0rcolours.length)];
           cubeside=Math.floor(1+Math.random()*6);
@@ -1161,7 +1161,7 @@ function main(){
   }
 
   // Explosions and torsion bar
-  else if (beat<179){
+  else if (beat<178){
     if (explinit==0){
       subcycle=1;
       explinit=1;
@@ -1204,7 +1204,7 @@ function main(){
     meatballs(cycle);
     if (beat>196){
       if (meattext==0){subcycle=1;meattext=1};
-      bouncescroll(550,"Code + music (.nsf) < 64 kB !!!               ;P",subcycle*2.5,15)
+      bouncescroll(550,"Code + music (.nsf) < 64 kB !!!               ;P",subcycle*2.5,10 )
     }
   }
 
@@ -1227,7 +1227,7 @@ function main(){
   }
 
   // Buildup
-  else if (beat<253){
+  else if (beat<252){
     raytrace(0,300,600,300,1,256,000,000,(subcycle)%70);
     raytrace(0,310,600,310,1,000,256,000,(subcycle-10)%70);
     raytrace(0,320,600,320,1,000,000,256,(subcycle-50)%70);
@@ -1242,7 +1242,7 @@ function main(){
   }
 
   // Lasers and shit
-  else if (beat<260){
+  else if (beat<259){
 
     if (beat%2==0){ctx.fillText("_(^o^\\)",265,250);}
     else if (beat%2==1){ctx.fillText("\\(^o^_)",265,250);}
@@ -1251,15 +1251,15 @@ function main(){
     jumpheight=15*Math.abs(Math.sin(3.14*cycle/10));
     ctx.font="20px sans-serif bold";
     for (i=0; i<15; i++){
-        ctx.fillText("\\O/",50+34*i,330-15*Math.abs(Math.sin(3.14*(cycle-i)/10)));
+        ctx.fillText("\\O/",50+34*i,330-15*Math.abs(Math.sin(3.14*(cycle-i)/20)));
     }
     ctx.font="22px sans-serif bold";
     for (i=0; i<14; i++){
-        ctx.fillText("\\O/",50+37*i,365-15*Math.abs(Math.sin(3.14*(cycle-i)/10)));
+        ctx.fillText("\\O/",50+37*i,365-15*Math.abs(Math.sin(3.14*(cycle-i)/20)));
     }
     ctx.font="25px sans-serif bold";
     for (i=0; i<13; i++){
-        ctx.fillText("\\O/",50+40*i,400-15*Math.abs(Math.sin(3.14*(cycle-i)/10)));
+        ctx.fillText("\\O/",50+40*i,400-15*Math.abs(Math.sin(3.14*(cycle-i)/20)));
     }
     laz0r2(500,100,"green",cycle);
     laz0r2(-20,-20,"green",cycle);
@@ -1272,22 +1272,24 @@ function main(){
     ctx.font="25px sans-serif bold";
   }
 
-  // Drawing fire first so it stays in the background
-  if (beat<269){
-    fire(cycle);
+  // Drawing fire
+  else if (beat<267){
+    if (roastinit==0){subcycle=1;roastinit=1};
+    fire(subcycle);
+    chicken(cycle);
   }
 
   // octoamoeba
-  else if (beat<286){
+  else if (beat<284){
     trail(cycle);
-    if (beat>276){
+    if (beat>274){
       frenchname(cycle);
     }
   }
-  else if (beat<318){
+  else if (beat<316){
     if (moretextinit==0){subcycle=1;moretextinit=1};
-    octopus(300,300,cycle);
-    normscroll(400,"Hope you enjoyed this silly demo.                       Now go make your own! :D",subcycle);
+    octopus(300,300,cycle/2);
+    normscroll(400,"Hope you enjoyed this silly demo.                       Now go make your own! :D",subcycle/1.5);
   }
 
   // Fireworks and logo
