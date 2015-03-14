@@ -985,7 +985,7 @@ function updatebeat(){
   }
   // Beat printing for syncing and debugging
   // Remove for release pl0x
-  ctx.fillText(beat+"/"+cycle+"/"+subcycle,20,20);
+  // ctx.fillText(beat+"/"+cycle+"/"+subcycle,20,20);
 }
 
 // Iterator specs
